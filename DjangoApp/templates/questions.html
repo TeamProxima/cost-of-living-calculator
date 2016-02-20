@@ -102,13 +102,15 @@ select {
 }
 
 .question {
-    display: block;
+    display: inline-block;
+    position: relative;
     width: 500px;
     height: 100px;
     border-radius: 15px;
-    background: linear-gradient(#a18fa0, #a18d6c); /* Standard syntax */
+    background: linear-gradient(#a18fa0, #a18d6c);
     border-color: white;
     border-width: 2px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     opacity: 0.5;
 
 }
@@ -162,7 +164,8 @@ select {
                         {% for i in q.range %}
                           <option>{{ i }}</option>
                         {% endfor %}
-                    </select>
+                    </select><br>
+                    <div id='slider'></div>
             {% endif %}
 
             {% if q.type == 4 %}
