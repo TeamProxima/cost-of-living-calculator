@@ -1,15 +1,6 @@
-from django.http import HttpResponse
 from django.shortcuts import redirect,render
-from django.template import RequestContext, loader
-from django.core.context_processors import csrf
-from django.contrib.sessions import *
-from django.http import HttpResponse
+from django.template import RequestContext
 from json import dumps, loads, JSONEncoder, JSONDecoder
-from datetime import datetime
-from random import randint
-from .models import *
-
-import time
 
 
 def home(request):
@@ -24,22 +15,35 @@ def home(request):
 
 def run(request):
     '''Ask questions to calculate price'''
-    try:
-        '''
-        country = request.GET['country']
-        city = request.GET['city']
+    '''
+        Question Format
+        ID: Unique question identifier to evaluate answers
+        Type: Identifier to determinte question format
+            Radio Button: 0
+            Text Input: 1
+            Dropdown: 2
+            Slider: 3
+            Checkbox: 4
+        Text: Question text
+        Alternative: Radio button, checkbox, dropdown alternatives
+        Range: Slider range
 
-        print country, city
-        '''
-        print request.POST
-        return render(
-            request, 'questions.html',
-            {'message':'CAT1',
-             'questions':[{'type': 0, 'text': "amina koyyim", 'alt':['DENEME', 'DENEME1']},
-                          {'type': 1, 'text': "rack this bitch"},
-                          {'type': 2, 'text': "yeni bir soru daha", 'opt':['BENI SEC', 'BENI DE SEC']},
-                          {'type': 3, 'text': "sliderini kullan", 'range': range(6)}
-                          ]})
+    '''
+    questions = [{'id': '4444', 'type': 0, 'text': "amina koyyim", 'alt':['DENEME', 'DENEME1']},
+          {'id': '445', 'type': 1, 'text': "rack this bitch"},
+          {'id': '22', 'type': 2, 'text': "yeni bir soru daha", 'alt':['BENI SEC', 'BENI DE SEC']},
+          {'id': '3333', 'type': 3, 'text': "sliderini kullan", 'range': range(6)},
+          {'id': '222', 'type': 4, 'text': "BUNLAR DA CHECKBOX", 'alt':['gelsin', 'gelmesin']}
+          ]
+
+    try:
+        if request.META['HTTP_REFERER'].split('/')[-1] == 'home':
+            '''For country and city selection after index'''
+            country = request.GET['country']
+            city = request.GET['city']
+        return render(request, 'questions.html',
+                    {'message': '',
+                    'questions': questions})
     except Exception as e:
         print e
         return redirect("/home")

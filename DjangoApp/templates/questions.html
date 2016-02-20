@@ -93,7 +93,7 @@ select {
     margin-top: 10px;
     -webkit-appearance: none;
    }
-}
+
 
 </style>
 
@@ -115,15 +115,13 @@ select {
    There are {{ questions|length }} question(s) in this category:
    {% for q in questions %}
 
-       <div style="background-color:lightblue; color:white; padding:20px; border-style: solid; border-color: red;">
+       <div id="{{ q.id }}" style="background-color:lightblue; color:white; padding:20px; border-style: solid; border-color: red;">
             <h2>{{ q.text }}</h2>
 
             {% if q.type == 0 %}
-                <form action="">
                 {% for a in q.alt %}
                   <input class="answer" type="radio" name="alt" value="{{ a }}"> "{{ a }}" <br>
                 {% endfor %}
-                </form>
             {% endif %}
 
            {% if q.type == 1 %}
@@ -131,22 +129,27 @@ select {
            {% endif %}
 
            {% if q.type == 2 %}
-                <form action="">
-                    <select class="answer">
-                        {% for o in q.opt %}
-                            <option value="{{ o }}"">"{{ o }}"</option>
-                        {% endfor %}
-                    </select>
-                </form>
+                <select class="answer">
+                    {% for a in q.alt %}
+                        <option value="{{ a }}">"{{ a }}"</option>
+                    {% endfor %}
+                </select>
            {% endif %}
 
            {% if q.type == 3 %}
                 <label for="number">Number</label>
-                    <select name="number" id="number">
+                    <select class="answer" name="number" id="number">
                         {% for i in q.range %}
                           <option>{{ i }}</option>
                         {% endfor %}
                     </select>
+            {% endif %}
+
+            {% if q.type == 4 %}
+                {% for a in q.alt %}
+                    <input class="answer" type="checkbox" name="alt" value="{{ a }}"> "{{ a }}" <br>
+                {% endfor %}
+
             {% endif %}
        </div>
    {% endfor %}
@@ -182,42 +185,42 @@ select {
 
 
     function prepareAnswers() {
-        answers = [];
+        var answers = {};
+        var value;
         $(".answer").each(function() {
             if($(this).attr('type') == 'radio') {
                 console.log('CHECKED');
+                if ($(this).is(":checked"))
+                    value = $(this).val();
+                else
+                    value = null;
+            }
+            else if($(this).attr('type') == 'checkbox') {
                 if($(this).is(":checked"))
-                    answers.push($(this).val());
+                    value = $(this).val();
+                else
+                    value = null;
             }
             else
-                answers.push($(this).val());
+                value = $(this).val();
+            var id = $(this).closest("div").attr("id");
+            if(value != null) {
+                if (answers[id])
+                    answers[id].push(value);
+                else
+                    answers[id] = [value];
+            }
         });
-        return {ANS: answers};
+        return answers;
     }
 
     function sendAJAX() {
-
-        var csrftoken = $.cookie('csrftoken');
-
-        function csrfSafeMethod(method) {
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-
-        $.ajaxSetup({
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain)
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        });
-
-
         $.ajax({
-            traditional: true, type: 'POST', url: '/questions',
+            traditional: true, type: 'GET', url: '/questions',
             data: {answers: JSON.stringify(prepareAnswers())},
 
             success: function (data) {
                 response = data;
-                console.log('ADADASDAS')
             },
             failed: function (data) {
                 onsole.log(data);
@@ -226,36 +229,6 @@ select {
         });
     }
 }
-
-
-//-----------------------------------------KEY PRESS FUNCTIONS------------------------------------//
-
-{
-    function moveSelection(evt) {
-        if(evt.keyCode < 41 && evt.keyCode > 36) {
-            OPname = 'CHANGE'
-            switch (evt.keyCode) {
-                case 38:
-                    baseSight = [Math.max(0, baseSight[0] - 10), baseSight[1]];
-                    break;
-                case 40:
-                    baseSight = [Math.min(baseSight[0] + 10, 100), baseSight[1]];
-                    break;
-                case 37:
-                    baseSight = [baseSight[0], Math.max(0, baseSight[1] - 10)];
-                    break;
-                case 39:
-                    baseSight = [baseSight[0], Math.min(baseSight[1] + 10, 100)];
-                    break;
-            }
-            sendAJAX();
-        }
-
-    };
-    window.addEventListener('keydown', moveSelection);
-}
-
-
 
 </script>
 
