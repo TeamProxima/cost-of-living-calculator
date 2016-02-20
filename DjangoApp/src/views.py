@@ -29,11 +29,13 @@ def run(request):
         Range: Slider range
 
     '''
-    questions = [{'id': '4444', 'type': 0, 'text': "amina koyyim", 'alt':['DENEME', 'DENEME1']},
-          {'id': '445', 'type': 1, 'text': "rack city bitch", 'alt': ['']},
-          {'id': '22', 'type': 2, 'text': "yeni bir soru daha", 'alt':['BENI SEC', 'BENI DE SEC']},
-          {'id': '3333', 'type': 3, 'text': "sliderini kullan", 'range': range(6)},
-          {'id': '222', 'type': 4, 'text': "BUNLAR DA CHECKBOX", 'alt':['gelsin', 'gelmesin']}
+    questions = [{'id': 'mealQ1', 'type': 4, 'text': "What meals do you have?", 'alt':['Breakfast', 'Launch', 'Dinner']},
+          {'id': 'mealQ2', 'type': 3, 'text': "What is your preference for meal?", 'range': range(100), 'alt':['Vegetable', 'Meat']},
+          {'id': 'mealQ3', 'type': 1, 'text': "How often do you go out for meal?", 'alt':['times a week']},
+          {'id': 'mealQ4', 'type': 3, 'text': "What do you prefer?", 'range': range(100), alt:['Restaurant', 'Fast Food']},
+          ]
+    questions2 = [{'id': 'beer_cigQ1', 'type': 1, 'text': "How many bottles of beer do you drink per week?"},
+          {'id': 'beer_cigQ2', 'type': 1, 'text': "How many packets of cigarette do you smoke per week?"},
           ]
 
     try:
