@@ -2,8 +2,6 @@ from django.http import HttpResponse
 from django.shortcuts import redirect,render
 from django.template import RequestContext, loader
 from django.core.context_processors import csrf
-from django.contrib.auth import authenticate,login,logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.sessions import *
 from django.http import HttpResponse
 from json import dumps, loads, JSONEncoder, JSONDecoder
@@ -27,16 +25,21 @@ def home(request):
 def run(request):
     '''Ask questions to calculate price'''
     try:
+        '''
         country = request.GET['country']
         city = request.GET['city']
-        print country, city
 
+        print country, city
+        '''
+        print request.POST
         return render(
             request, 'questions.html',
             {'message':'CAT1',
              'questions':[{'type': 0, 'text': "amina koyyim", 'alt':['DENEME', 'DENEME1']},
+                          {'type': 1, 'text': "rack this bitch"},
                           {'type': 2, 'text': "yeni bir soru daha", 'opt':['BENI SEC', 'BENI DE SEC']},
-                          {'type': 1, 'text': "rack this bitch"}]})
+                          {'type': 3, 'text': "sliderini kullan", 'range': range(6)}
+                          ]})
     except Exception as e:
         print e
         return redirect("/home")

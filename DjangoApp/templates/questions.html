@@ -100,125 +100,103 @@ select {
 {% load staticfiles %}
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+<link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' rel='stylesheet' type='text/css'>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-<body>
+  <body>
 <div class="body"></div>
 {% if message %}
 <p id='question'>{{message}}</p>
 {% endif %}
-
+<div id="slider"></div>
 
 {% if questions %}
    There are {{ questions|length }} question(s) in this category:
    {% for q in questions %}
 
-       <div style="background-color:black; color:white; padding:20px; border-style: solid; border-color: red;">
+       <div style="background-color:lightblue; color:white; padding:20px; border-style: solid; border-color: red;">
             <h2>{{ q.text }}</h2>
 
             {% if q.type == 0 %}
                 <form action="">
                 {% for a in q.alt %}
-                  <input type="radio" name="alt" value={{ a }}> {{ a }} <br>
+                  <input class="answer" type="radio" name="alt" value="{{ a }}"> "{{ a }}" <br>
                 {% endfor %}
                 </form>
             {% endif %}
 
            {% if q.type == 1 %}
-                <form action="">
                   <input class="answer" type="text" name="text"><br>
-                </form>
            {% endif %}
 
            {% if q.type == 2 %}
                 <form action="">
                     <select class="answer">
                         {% for o in q.opt %}
-                            <option value={{ o }}>{{ o }}</option>
+                            <option value="{{ o }}"">"{{ o }}"</option>
                         {% endfor %}
                     </select>
                 </form>
            {% endif %}
 
+           {% if q.type == 3 %}
+                <label for="number">Number</label>
+                    <select name="number" id="number">
+                        {% for i in q.range %}
+                          <option>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+            {% endif %}
        </div>
    {% endfor %}
 {% else %}
    There are no questions in the system.
 {% endif %}
--->
+
+<input id='submit' type="button" value='Next' onclick ='sendAJAX();'/>
+
 <script>
 
 //--------------------------------------------VARIABLES---------------------------------------------//
 
-{
-    var Types = {'Road' : 0, 'Tree' : 2, 'Water' : 4, 'Clicked' : 6, 'Building' : 7, 'Selected' : 8, 'Progressed' : 9}
-    var downPOS, upPOS , corners, lastClicked;
-    var OPname ;
-    var canvas = document.getElementById('myCanvas');
-    var context = canvas.getContext('2d');
-    var map;
-    var selectedIndex = -1;
-    var timer = 0 ;
-    var selectedAreas = [];
-    var baseSight = [0,0];
-}
 
 //-----------------------------------------BUTTON CLICK FUNCTIONS------------------------------------//
 
 {
-    function prepareForOp() {
-        var LOC = [];
-        var dict = {};
-        if (OPname == 'START') {
-            LOC = selectedAreas[selectedAreas.length - 1];
-            LOC = [[LOC[0][0] + baseSight[0], LOC[0][1] + baseSight[1]], [LOC[1][0] + baseSight[0], LOC[1][1] + baseSight[1]]]
-            dict = {OP: OPname, LOC: LOC};
-        }
-        if (OPname == 'ADD') {
-            var preLOC = [];
-            for (var i in selectedAreas) {
-                preLOC.push(prepareLocFormat(selectedAreas[i]));
+    $(function() {
+        var select = $( "#number" );
+        var slider = $( "<div id='slider'></div>" ).insertAfter( select ).slider({
+            min: 1,
+            max: 6,
+            range: "min",
+            value: select[ 0 ].selectedIndex + 1,
+            slide: function( event, ui ) {
+            select[ 0 ].selectedIndex = ui.value - 1;
             }
-            for (var i in preLOC) {
-                for (var j in preLOC[i])
-                    LOC.push([preLOC[i][j][0] + baseSight[0], preLOC[i][j][1] + baseSight[1], preLOC[i][j][2]]);
+        });
+        $( "#number" ).change(function() {
+          slider.slider( "value", this.selectedIndex + 1 );
+        });
+     });
+
+
+    function prepareAnswers() {
+        answers = [];
+        $(".answer").each(function() {
+            if($(this).attr('type') == 'radio') {
+                console.log('CHECKED');
+                if($(this).is(":checked"))
+                    answers.push($(this).val());
             }
-            if ($('#ADDType').val() == 'Natural Element') {
-                dict = {
-                    OP: OPname,
-                    NAME: $('#ADDName').val(),
-                    LOC: LOC,
-                    TYPE: $('#ADDType').val(),
-                    NETYPE: $('#NEType').val()
-                };
-            }
-            else {
-                dict = {OP: OPname, NAME: $('#ADDName').val(), LOC: LOC, TYPE: $('#ADDType').val()};
-            }
-        }
-        if (OPname == 'MOVE') {
-            LOC = lastClicked;
-            dict = {OP: OPname, ID: map[selectedIndex].ID, LOC: LOC};
-        }
-        if (OPname == 'DELETE' || OPname == 'STOP') {
-            dict = {OP: OPname, ID: map[selectedIndex].ID};
-        }
-        if (OPname == 'UNDO' || OPname == 'UNDOALL' || OPname == 'REFRESH') {
-            dict = {OP: OPname};
-        }
-        if (OPname == 'CHANGE') {
-            dict = {OP: OPname, LOC: baseSight};
-        }
-        return dict;
+            else
+                answers.push($(this).val());
+        });
+        return {ANS: answers};
     }
 
-
-    $(".OPbutton").click(function () {
-        OPname = this.id;
-        $('.panel').css('display', 'none');
-        $('#' + OPname + 'Panel').css('display', 'block');
-    });
-
     function sendAJAX() {
+
         var csrftoken = $.cookie('csrftoken');
 
         function csrfSafeMethod(method) {
@@ -234,35 +212,12 @@ select {
 
 
         $.ajax({
-            traditional: true, type: 'POST', url: '/Editor',
-            data: {JSON: JSON.stringify(prepareForOp())},
+            traditional: true, type: 'POST', url: '/questions',
+            data: {answers: JSON.stringify(prepareAnswers())},
 
             success: function (data) {
                 response = data;
-                if (response.RESULT.search('success') != -1) {
-                    if (OPname == 'START') {
-                        map.unshift(response.OBJECT);
-                    }
-                    if (OPname == 'ADD') {
-                        map.push(response.OBJECT);
-                    }
-                    if (OPname == 'DELETE') {
-                        delete map[selectedIndex];
-                    }
-                    if (OPname == 'MOVE') {
-                        delete map[selectedIndex];
-                        map.push(response.OBJECT);
-                    }
-                    if (OPname == 'UNDO' || OPname == 'UNDOALL' || OPname == 'REFRESH' || OPname == 'CHANGE') {
-                        map = response.OBJECT;
-                    }
-                    if (OPname == 'STOP') {
-                        delete map[selectedIndex];
-                    }
-                }
-                selectedAreas = []
-                locateMap(map);
-                //alert(response.RESULT);
+                console.log('ADADASDAS')
             },
             failed: function (data) {
                 onsole.log(data);
