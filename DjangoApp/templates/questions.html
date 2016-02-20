@@ -29,11 +29,14 @@ body{
     bottom: -40px;
     width: 1440px;
     height: 720px;
-    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIBO1Bq4W6VsDaE37z985u8sbegr4Ead4-oCXVtOh7s9M3fUao);
+    background-image: url(https://newevolutiondesigns.com/images/freebies/city-wallpaper-18.jpg);
     background-size: cover;
-    -webkit-filter: blur(5px);
+    background-position:50% 50%;
+    /*-webkit-filter: blur(5px);*/
     z-index: -1;
 }
+
+
 
 input[type=text]{
     width: 250px;
@@ -92,8 +95,23 @@ select {
     padding: 6px;
     margin-top: 10px;
     -webkit-appearance: none;
-   }
+}
 
+#questioncontainer {
+
+}
+
+.question {
+    display: block;
+    width: 500px;
+    height: 100px;
+    border-radius: 15px;
+    background: linear-gradient(#a18fa0, #a18d6c); /* Standard syntax */
+    border-color: white;
+    border-width: 2px;
+    opacity: 0.5;
+
+}
 
 </style>
 
@@ -109,13 +127,13 @@ select {
 {% if message %}
 <p id='question'>{{message}}</p>
 {% endif %}
-<div id="slider"></div>
 
+<div id="questioncontainer">
 {% if questions %}
    There are {{ questions|length }} question(s) in this category:
    {% for q in questions %}
 
-       <div id="{{ q.id }}" style="background-color:lightblue; color:white; padding:20px; border-style: solid; border-color: red;">
+       <div class='question' id="{{ q.id }}" style=" color:white; padding:20px; border-style: solid;">
             <h2>{{ q.text }}</h2>
 
             {% if q.type == 0 %}
@@ -125,7 +143,9 @@ select {
             {% endif %}
 
            {% if q.type == 1 %}
-                  <input class="answer" type="text" name="text"><br>
+               {% for a in q.alt %}
+                  <input class="answer" type="text" name="text">{{ a }}<br>
+               {% endfor %}
            {% endif %}
 
            {% if q.type == 2 %}
@@ -162,6 +182,31 @@ select {
 <script>
 
 //--------------------------------------------VARIABLES---------------------------------------------//
+
+        $(".question").mouseenter(
+          function() {
+              $(this).animate({
+                width: "50%",
+                height: "150px",
+                opacity: 1,
+                marginLeft: "3in",
+                fontSize: "1.5em",
+                borderWidth: "2px"
+              }, 250, 'linear');
+              $(this).css('z-index', 5)
+          });
+        $(".question").mouseleave(
+            function() {
+              $(this).animate({
+                width: "35%",
+                height: "100px",
+                marginLeft: "1in",
+                opacity: 0.5,
+                fontSize: "0.5em",
+                borderWidth: "1px"
+              }, 400, 'linear' );
+                $(this).css('z-index', 1)
+          });
 
 
 //-----------------------------------------BUTTON CLICK FUNCTIONS------------------------------------//
@@ -231,7 +276,7 @@ select {
 }
 
 </script>
-
+</div>
 </div>
 </body>
 </html>

@@ -10,7 +10,7 @@ def home(request):
         return render(request, 'index.html', context)
     except Exception as e:
         print e
-        return redirect("/home")
+        return redirect("/")
 
 
 def run(request):
@@ -18,7 +18,7 @@ def run(request):
     '''
         Question Format
         ID: Unique question identifier to evaluate answers
-        Type: Identifier to determinte question format
+        Type: Identifier to determine question format
             Radio Button: 0
             Text Input: 1
             Dropdown: 2
@@ -30,14 +30,14 @@ def run(request):
 
     '''
     questions = [{'id': '4444', 'type': 0, 'text': "amina koyyim", 'alt':['DENEME', 'DENEME1']},
-          {'id': '445', 'type': 1, 'text': "rack this bitch"},
+          {'id': '445', 'type': 1, 'text': "rack city bitch", 'alt': ['']},
           {'id': '22', 'type': 2, 'text': "yeni bir soru daha", 'alt':['BENI SEC', 'BENI DE SEC']},
           {'id': '3333', 'type': 3, 'text': "sliderini kullan", 'range': range(6)},
           {'id': '222', 'type': 4, 'text': "BUNLAR DA CHECKBOX", 'alt':['gelsin', 'gelmesin']}
           ]
 
     try:
-        if request.META['HTTP_REFERER'].split('/')[-1] == 'home':
+        if request.META['HTTP_REFERER'].split('/')[-1] == '':
             '''For country and city selection after index'''
             country = request.GET['country']
             city = request.GET['city']
@@ -46,4 +46,4 @@ def run(request):
                     'questions': questions})
     except Exception as e:
         print e
-        return redirect("/home")
+        return redirect("/")
