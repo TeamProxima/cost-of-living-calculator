@@ -2,7 +2,7 @@
 <html >
   <head>
     <meta charset="UTF-8">
-    <title>Editor</title>
+    <title>Proxima</title>
 
       <style>
             @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
@@ -62,6 +62,10 @@ body{
 
 .header div span{
 	color: #5379fa !important;
+}
+
+.header #pname{
+    position: absolute !important;
 }
 
 .login{
@@ -155,14 +159,13 @@ body{
     <div class="body"></div>
 		<div class="grad"></div>
 		<div class="header">
-			<div>MAP<span>EDITOR</span></div>
+			<div id="pname">PROX<span>IMA</span></div>
 		</div>
 		<br>
 		<div class="login">
-			<form method="post" action="/home">
-				<input type="text" placeholder="country" name="Country"><br>
-				<input type="text" placeholder="city" name="City"><br>
-				{% csrf_token %}
+			<form method="get" action="/questions">
+				<input type="text" placeholder="country" name="country"><br>
+				<input type="text" placeholder="city" name="city"><br>
 				<input type="submit" name="search" value="Search">
 			</form>
 		</div>

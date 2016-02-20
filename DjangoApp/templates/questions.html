@@ -1,0 +1,310 @@
+{% block content %}
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Proxima</title>
+
+
+
+
+        <style>
+      @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
+      @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
+
+body{
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #fff;
+    font-family: 'Exo', sans-serif;
+    font-size: 12px;
+}
+
+.body{
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -40px;
+    bottom: -40px;
+    width: 1440px;
+    height: 720px;
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIBO1Bq4W6VsDaE37z985u8sbegr4Ead4-oCXVtOh7s9M3fUao);
+    background-size: cover;
+    -webkit-filter: blur(5px);
+    z-index: -1;
+}
+
+input[type=text]{
+    width: 250px;
+    height: 30px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 2px;
+    color: #a18d6c;
+    font-family: 'Exo', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 4px;
+}
+
+input[type=button]{
+    width: 140px;
+    height: 35px;
+    background: #fff;
+    border: 1px solid #fff;
+    cursor: pointer;
+    border-radius: 2px;
+    color: #a18d6c;
+    font-family: 'Exo', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 6px;
+    margin-top: 10px;
+}
+
+
+input[type=text]:focus{
+    outline: none;
+    border: 1px solid rgba(255,255,255,0.9);
+}
+
+
+::-webkit-input-placeholder{
+   color: rgba(255,255,255,0.6);
+}
+
+::-moz-input-placeholder{
+   color: rgba(255,255,255,0.6);
+}
+
+select {
+    width: 260px;
+    height: 35px;
+    background: #fff;
+    border: 1px solid #fff;
+    cursor: pointer;
+    border-radius: 2px;
+    color: #a18d6c;
+    font-family: 'Exo', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 6px;
+    margin-top: 10px;
+    -webkit-appearance: none;
+   }
+}
+
+</style>
+
+{% load staticfiles %}
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+
+<body>
+<div class="body"></div>
+{% if message %}
+<p id='question'>{{message}}</p>
+{% endif %}
+
+
+{% if questions %}
+   There are {{ questions|length }} question(s) in this category:
+   {% for q in questions %}
+
+       <div style="background-color:black; color:white; padding:20px; border-style: solid; border-color: red;">
+            <h2>{{ q.text }}</h2>
+
+            {% if q.type == 0 %}
+                <form action="">
+                {% for a in q.alt %}
+                  <input type="radio" name="alt" value={{ a }}> {{ a }} <br>
+                {% endfor %}
+                </form>
+            {% endif %}
+
+           {% if q.type == 1 %}
+                <form action="">
+                  <input class="answer" type="text" name="text"><br>
+                </form>
+           {% endif %}
+
+           {% if q.type == 2 %}
+                <form action="">
+                    <select class="answer">
+                        {% for o in q.opt %}
+                            <option value={{ o }}>{{ o }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+           {% endif %}
+
+       </div>
+   {% endfor %}
+{% else %}
+   There are no questions in the system.
+{% endif %}
+-->
+<script>
+
+//--------------------------------------------VARIABLES---------------------------------------------//
+
+{
+    var Types = {'Road' : 0, 'Tree' : 2, 'Water' : 4, 'Clicked' : 6, 'Building' : 7, 'Selected' : 8, 'Progressed' : 9}
+    var downPOS, upPOS , corners, lastClicked;
+    var OPname ;
+    var canvas = document.getElementById('myCanvas');
+    var context = canvas.getContext('2d');
+    var map;
+    var selectedIndex = -1;
+    var timer = 0 ;
+    var selectedAreas = [];
+    var baseSight = [0,0];
+}
+
+//-----------------------------------------BUTTON CLICK FUNCTIONS------------------------------------//
+
+{
+    function prepareForOp() {
+        var LOC = [];
+        var dict = {};
+        if (OPname == 'START') {
+            LOC = selectedAreas[selectedAreas.length - 1];
+            LOC = [[LOC[0][0] + baseSight[0], LOC[0][1] + baseSight[1]], [LOC[1][0] + baseSight[0], LOC[1][1] + baseSight[1]]]
+            dict = {OP: OPname, LOC: LOC};
+        }
+        if (OPname == 'ADD') {
+            var preLOC = [];
+            for (var i in selectedAreas) {
+                preLOC.push(prepareLocFormat(selectedAreas[i]));
+            }
+            for (var i in preLOC) {
+                for (var j in preLOC[i])
+                    LOC.push([preLOC[i][j][0] + baseSight[0], preLOC[i][j][1] + baseSight[1], preLOC[i][j][2]]);
+            }
+            if ($('#ADDType').val() == 'Natural Element') {
+                dict = {
+                    OP: OPname,
+                    NAME: $('#ADDName').val(),
+                    LOC: LOC,
+                    TYPE: $('#ADDType').val(),
+                    NETYPE: $('#NEType').val()
+                };
+            }
+            else {
+                dict = {OP: OPname, NAME: $('#ADDName').val(), LOC: LOC, TYPE: $('#ADDType').val()};
+            }
+        }
+        if (OPname == 'MOVE') {
+            LOC = lastClicked;
+            dict = {OP: OPname, ID: map[selectedIndex].ID, LOC: LOC};
+        }
+        if (OPname == 'DELETE' || OPname == 'STOP') {
+            dict = {OP: OPname, ID: map[selectedIndex].ID};
+        }
+        if (OPname == 'UNDO' || OPname == 'UNDOALL' || OPname == 'REFRESH') {
+            dict = {OP: OPname};
+        }
+        if (OPname == 'CHANGE') {
+            dict = {OP: OPname, LOC: baseSight};
+        }
+        return dict;
+    }
+
+
+    $(".OPbutton").click(function () {
+        OPname = this.id;
+        $('.panel').css('display', 'none');
+        $('#' + OPname + 'Panel').css('display', 'block');
+    });
+
+    function sendAJAX() {
+        var csrftoken = $.cookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain)
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+
+        $.ajax({
+            traditional: true, type: 'POST', url: '/Editor',
+            data: {JSON: JSON.stringify(prepareForOp())},
+
+            success: function (data) {
+                response = data;
+                if (response.RESULT.search('success') != -1) {
+                    if (OPname == 'START') {
+                        map.unshift(response.OBJECT);
+                    }
+                    if (OPname == 'ADD') {
+                        map.push(response.OBJECT);
+                    }
+                    if (OPname == 'DELETE') {
+                        delete map[selectedIndex];
+                    }
+                    if (OPname == 'MOVE') {
+                        delete map[selectedIndex];
+                        map.push(response.OBJECT);
+                    }
+                    if (OPname == 'UNDO' || OPname == 'UNDOALL' || OPname == 'REFRESH' || OPname == 'CHANGE') {
+                        map = response.OBJECT;
+                    }
+                    if (OPname == 'STOP') {
+                        delete map[selectedIndex];
+                    }
+                }
+                selectedAreas = []
+                locateMap(map);
+                //alert(response.RESULT);
+            },
+            failed: function (data) {
+                onsole.log(data);
+                alert("Error!");
+            }
+        });
+    }
+}
+
+
+//-----------------------------------------KEY PRESS FUNCTIONS------------------------------------//
+
+{
+    function moveSelection(evt) {
+        if(evt.keyCode < 41 && evt.keyCode > 36) {
+            OPname = 'CHANGE'
+            switch (evt.keyCode) {
+                case 38:
+                    baseSight = [Math.max(0, baseSight[0] - 10), baseSight[1]];
+                    break;
+                case 40:
+                    baseSight = [Math.min(baseSight[0] + 10, 100), baseSight[1]];
+                    break;
+                case 37:
+                    baseSight = [baseSight[0], Math.max(0, baseSight[1] - 10)];
+                    break;
+                case 39:
+                    baseSight = [baseSight[0], Math.min(baseSight[1] + 10, 100)];
+                    break;
+            }
+            sendAJAX();
+        }
+
+    };
+    window.addEventListener('keydown', moveSelection);
+}
+
+
+
+</script>
+
+</div>
+</body>
+</html>
+{% endblock %}
