@@ -111,7 +111,7 @@ def misc_cost(clothes_count, cinema_count, fitness, prices):
 
 	total += clothes_cost*clothes_count/30.0
 	total += cinema_cost*cinema_count/30.0
-	if fitness == "Yes"
+	if fitness == "Yes":
 		total += fitness_cost/30.0
 
 	return total

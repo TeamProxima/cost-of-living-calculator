@@ -215,7 +215,7 @@
 				   {% if q.type == 3 %}
 						<label for="number"></label>
                             <div class="slidercontainer">
-                                <select class="answer number" name="{{ q.id }}" disabled="disabled">
+                                <select class="answer number" name="{{ q.id }}" >
                                     {% for i in q.range %}
                                       <option>{{ i }}</option>
                                     {% endfor %}

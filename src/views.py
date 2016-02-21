@@ -92,6 +92,7 @@ def run(request):
         if request.POST:
             request.session['page_index'] += 1
             request.session['answer'].update((request.POST.iterlists()))
+            print request.session['answer']
 
         return render(request, 'questions.html',
             {'message': '',
