@@ -8,18 +8,6 @@ import random
 from functions import *
 from models import *
 
-
-pictures = [
-    'http://www.mrwallpaper.com/wallpapers/Golden-Gate-Bridge-1920x1080.jpg',
-    'http://cdn.superbwallpapers.com/wallpapers/world/machu-picchu-3709-1920x1200.jpg',
-    'http://tremendouswallpapers.com/wp-content/uploads/2014/12/Burj_Al_Arab.jpg',
-    'http://www.goodwp.com/images/201212/goodwp.com_26355.jpg',
-    'https://wallpaperscraft.com/image/spain_toledo_lights_dusk_hdr_93798_1920x1080.jpg',
-    'https://wallpaperscraft.com/image/night_eiffel_tower_paris_france_13648_1920x1080.jpg',
-    'https://wallpaperscraft.com/image/new_york_statue_of_liberty_river_evening_28423_1920x1080.jpg',
-]
-
-
 def session_handler(request, new=True):
     if new:
         request.session['page_index'] = 0
@@ -96,7 +84,7 @@ def run(request):
 
         return render(request, 'questions.html',
             {'message': '',
-             'piclink': pictures[random.randint(0,6)],
+             'piclink': str(random.randint(0,6)) + ".jpg",
             'questions': qlist[request.session['page_index']]})
     except IndexError:
         '''
@@ -133,7 +121,8 @@ def run(request):
             Finished, calculate.
         '''
         session_handler(request, False)
-        return redirect("/")
+        #return redirect("/")
+        return render(request, 'result.html')
     except Exception as e:
         print e
         return redirect("/")

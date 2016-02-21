@@ -25,7 +25,7 @@
 		left: 0px;
 		right: 0px;
 		bottom: 0px;
-		background: url({{ piclink }}) center center fixed;
+		background: url({{ STATIC_URL }}{{ piclink }}) center center fixed;
 		-webkit-background-size: cover;
 		-moz-background-size: cover;
 		-o-background-size: cover;
@@ -215,7 +215,7 @@
 				   {% if q.type == 3 %}
 						<label for="number"></label>
                             <div class="slidercontainer">
-                                <select class="answer number" name="{{ q.id }}" >
+                                <select class="answer number" name="{{ q.id }}" disabled="disabled">
                                     {% for i in q.range %}
                                       <option>{{ i }}</option>
                                     {% endfor %}
@@ -274,6 +274,10 @@
                 $( ".infotext" ).each(function(){
                     $(this).css('visibility','hidden');
                 });
+            });
+
+            $('.next').click(function() {
+                $('.number').removeAttr('disabled');
             });
 		</script>
 	</div>
