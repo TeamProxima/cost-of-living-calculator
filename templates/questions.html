@@ -102,6 +102,7 @@ select {
 }
 
 .question {
+    display: table-caption;
     width: 500px;
     height: 100px;
     border-radius: 15px;
@@ -112,7 +113,33 @@ select {
     opacity: 0.5;
 
 }
+.question
+{
+    top:0;
+    left:0;
+    margin:0;
 
+    -moz-transition:all 2s;
+    -webkit-transition:all 2s;
+    -o-transition:all 2s;
+    transition:all 2s;
+}
+
+.question:hover
+{
+
+    margin-left: 5in;
+    margin-top:
+    opacity: 1;
+
+    -moz-transition:all 2s;
+    -webkit-transition:all 2s;
+    -o-transition:all 2s;
+    transition:all 2s;
+    -webkit-transform: scale(1.4);
+
+}
+}
 </style>
 
 {% load staticfiles %}
@@ -184,7 +211,7 @@ select {
 <script>
 
 //--------------------------------------------VARIABLES---------------------------------------------//
-
+/*
         $(".question").mouseenter(
           function() {
               $(this).animate({
@@ -210,11 +237,11 @@ select {
                 $(this).css('z-index', 1)
           });
 
-
+*/
 
 //-----------------------------------------BUTTON CLICK FUNCTIONS------------------------------------//
 
-{
+
     $(".slider").each(
         function() {
         $(this).slider();
@@ -222,64 +249,6 @@ select {
      });
 
 
-
-    function prepareAnswers() {
-        var answers = {};
-        var value;
-        $(".answer").each(function() {
-            if($(this).attr('type') == 'radio') {
-                console.log('CHECKED');
-                if ($(this).is(":checked"))
-                    value = $(this).val();
-                else
-                    value = null;
-            }
-            else if($(this).attr('type') == 'checkbox') {
-                if($(this).is(":checked"))
-                    value = $(this).val();
-                else
-                    value = null;
-            }
-            else
-                value = $(this).val();
-            var id = $(this).closest("div").attr("id");
-            if(value != null) {
-                if (answers[id])
-                    answers[id].push(value);
-                else
-                    answers[id] = [value];
-            }
-        });
-        return answers;
-    }
-
-    function sendAJAX() {
-        var csrftoken = $.cookie('csrftoken');
-
-        function csrfSafeMethod(method) {
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain)
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        });
-        $.ajax({
-            traditional: true, type: 'POST', url: '/questions',
-            data: {answers: JSON.stringify(prepareAnswers())},
-
-            success: function (data) {
-                response = data;
-            },
-            failed: function (data) {
-                onsole.log(data);
-                alert("Error!");
-            }
-        });
-    }
-}
 
 </script>
 </div>

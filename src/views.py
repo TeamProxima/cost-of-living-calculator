@@ -1,4 +1,5 @@
 from django.shortcuts import redirect,render
+from django.contrib.sessions import *
 from django.template import RequestContext
 from json import dumps, loads, JSONEncoder, JSONDecoder
 
@@ -40,20 +41,24 @@ def run(request):
           ]
 
     qlist = [questions, questions2]
-    page_index = 0
     try:
         if request.META['HTTP_REFERER'].split('/')[-1] == '':
             '''For country and city selection after index'''
             country = request.GET['country']
             city = request.GET['city']
+            request.session['page_index'] = 0
+            request.session['answer'] = {}
+            request.session.set_expiry(300)
+
         if request.POST:
-            page_index += 1
-            print request.POST
-        print page_index
+            request.session['page_index'] += 1
+            request.session['answer'].update((request.POST.iterlists()))
+            if request.session.get_expiry_age() > 300:
+                return redirect("/")
+
         return render(request, 'questions.html',
-                    {'message': '',
-                    'questions': qlist[page_index]})
+            {'message': '',
+            'questions': qlist[request.session['page_index']]})
     except Exception as e:
         print e
-        page_index = 0
         return redirect("/")
