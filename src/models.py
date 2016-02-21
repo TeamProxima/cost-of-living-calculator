@@ -129,7 +129,7 @@ class DjangoSession(models.Model):
 
 class Info(models.Model):
     country = models.CharField(max_length=255, blank=True)
-    city = models.CharField(max_length=255, blank=True)
+    city = models.CharField(max_length=255, blank=True, primary_key=True)
     p1 = models.FloatField(blank=True, null=True)
     p2 = models.FloatField(blank=True, null=True)
     p3 = models.FloatField(blank=True, null=True)
