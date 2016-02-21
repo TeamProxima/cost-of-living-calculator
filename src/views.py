@@ -6,7 +6,7 @@ import random
 
 from models import *
 
-<<<<<<< HEAD
+
 pictures = [
     'http://www.mrwallpaper.com/wallpapers/Golden-Gate-Bridge-1920x1080.jpg',
     'http://cdn.superbwallpapers.com/wallpapers/world/machu-picchu-3709-1920x1200.jpg',
@@ -14,7 +14,6 @@ pictures = [
     'http://1920x1080hdwallpapers.com/image/201502/city/336/new-york-times-square.jpg',
     'https://wallpaperscraft.com/image/spain_toledo_lights_dusk_hdr_93798_1920x1080.jpg'
 ]
-
 
 
 def session_handler(request, new=True):
@@ -27,9 +26,9 @@ def session_handler(request, new=True):
         return False
     return True
 
-=======
-import MySQLdb
->>>>>>> 9f93657279c2bf2b49b535b73bd9eb037bc6ec22
+
+
+
 
 def home(request):
     '''Show country and city selection'''
@@ -57,11 +56,8 @@ def run(request):
         Range: Slider range
 
     '''
-<<<<<<< HEAD
-    global pictures
-=======
 
->>>>>>> 9f93657279c2bf2b49b535b73bd9eb037bc6ec22
+    global pictures
     questions = [{'id': 'mealQ1', 'type': 4, 'text': "What meals do you have?", 'alt':['Breakfast', 'Launch', 'Dinner']},
           {'id': 'mealQ2', 'type': 3, 'text': "What is your preference for meal?", 'range': range(100), 'alt':['Vegetable', 'Meat']},
           {'id': 'mealQ3', 'type': 1, 'text': "How often do you go out for meal?", 'alt':[' times a week']},
@@ -97,10 +93,4 @@ def run(request):
         return redirect("/")
     except Exception as e:
         print e
-<<<<<<< HEAD
         return redirect("/")
-=======
-        return redirect("/")
-        page_index = 0
-        return redirect("/")
->>>>>>> 9f93657279c2bf2b49b535b73bd9eb037bc6ec22
