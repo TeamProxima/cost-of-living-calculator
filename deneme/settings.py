@@ -59,19 +59,9 @@ WSGI_APPLICATION = 'deneme.wsgi.application'
 
 DATABASES = {
     'default': {
-<<<<<<< HEAD
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'db.sqlite3',
     }
-=======
-        'ENGINE': 'django.db.backends.mysql',
-	'NAME': 'test',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '169.54.133.72',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-	}
->>>>>>> 9f93657279c2bf2b49b535b73bd9eb037bc6ec22
 }
 
 # Internationalization
@@ -94,9 +84,10 @@ USE_TZ = True
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR,  'templates'),
     '/home/blacksimit/tmp/deneme/templates',
+
 )
  
-STATIC_URL = '/static/'
+STATIC_URL = '/DjangoApp/static/'
  
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -105,5 +96,5 @@ STATICFILES_FINDERS = (
  
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, STATIC_URL),
-    '/home/blacksimit/tmp/deneme/static/',
+    '/Users/Dodo/Documents/hackathon/DjangoApp/static/',
 )

@@ -11,8 +11,10 @@ pictures = [
     'http://www.mrwallpaper.com/wallpapers/Golden-Gate-Bridge-1920x1080.jpg',
     'http://cdn.superbwallpapers.com/wallpapers/world/machu-picchu-3709-1920x1200.jpg',
     'http://tremendouswallpapers.com/wp-content/uploads/2014/12/Burj_Al_Arab.jpg',
-    'http://1920x1080hdwallpapers.com/image/201502/city/336/new-york-times-square.jpg',
-    'https://wallpaperscraft.com/image/spain_toledo_lights_dusk_hdr_93798_1920x1080.jpg'
+    'http://www.goodwp.com/images/201212/goodwp.com_26355.jpg',
+    'https://wallpaperscraft.com/image/spain_toledo_lights_dusk_hdr_93798_1920x1080.jpg',
+    'https://wallpaperscraft.com/image/night_eiffel_tower_paris_france_13648_1920x1080.jpg',
+    'https://wallpaperscraft.com/image/new_york_statue_of_liberty_river_evening_28423_1920x1080.jpg',
 ]
 
 
@@ -25,9 +27,6 @@ def session_handler(request, new=True):
         del request.session['page_index']
         return False
     return True
-
-
-
 
 
 def home(request):
@@ -59,9 +58,9 @@ def run(request):
 
     global pictures
     questions = [{'id': 'mealQ1', 'type': 4, 'text': "What meals do you have?", 'alt':['Breakfast', 'Launch', 'Dinner']},
-          {'id': 'mealQ2', 'type': 3, 'text': "What is your preference for meal?", 'range': range(100), 'alt':['Vegetable', 'Meat']},
-          {'id': 'mealQ3', 'type': 1, 'text': "How often do you go out for meal?", 'alt':[' times a week']},
-          {'id': 'mealQ4', 'type': 3, 'text': "What do you prefer?", 'range': range(100), 'alt': ['Restaurant', 'Fast Food']}
+          {'id': 'mealQ2', 'type': 3, 'text': "What is your preference for meal?", 'range': range(101), 'alt':['Vegetable', 'Meat']},
+          {'id': 'mealQ3', 'type': 1, 'text': "How often do you go out for meal?", 'alt':['times a week.']},
+          {'id': 'mealQ4', 'type': 3, 'text': "What do you prefer?", 'range': range(101), 'alt': ['Restaurant', 'Fast Food']}
           ]
     questions2 = [{'id': 'beer_cigQ1', 'type': 1, 'text': "How many bottles of beer do you drink per week?", 'alt':[' ']},
           {'id': 'beer_cigQ2', 'type': 1, 'text': "How many packets of cigarette do you smoke per week?", 'alt':[' ']}
@@ -81,7 +80,7 @@ def run(request):
 
         return render(request, 'questions.html',
             {'message': '',
-             'piclink': pictures[random.randint(0,4)],
+             'piclink': pictures[random.randint(0,6)],
             'questions': qlist[request.session['page_index']]})
     except IndexError:
         answers = request.session['answer']
