@@ -2,6 +2,7 @@ from django.shortcuts import redirect,render
 from django.template import RequestContext
 from json import dumps, loads, JSONEncoder, JSONDecoder
 
+from models import *
 
 def home(request):
     '''Show country and city selection'''
@@ -29,6 +30,7 @@ def run(request):
         Range: Slider range
 
     '''
+
     questions = [{'id': 'mealQ1', 'type': 4, 'text': "What meals do you have?", 'alt':['Breakfast', 'Launch', 'Dinner']},
           {'id': 'mealQ2', 'type': 3, 'text': "What is your preference for meal?", 'range': range(100), 'alt':['Vegetable', 'Meat']},
           {'id': 'mealQ3', 'type': 1, 'text': "How often do you go out for meal?", 'alt':['times a week']},
