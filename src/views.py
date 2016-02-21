@@ -49,6 +49,13 @@ def run(request):
             '''For country and city selection after index'''
             country = request.GET['country']
             city = request.GET['city']
+            db = MySQLdb.connect("localhost","root","root","test")
+            cursor = db.cursor()
+            print "select * from info where country='"+country+"' and city='"+city+"';"
+            cursor.execute("select * from info where country='"+country+"' and city='"+city+"';")
+            data = cursor.fetchone()
+            print data
+            db.close()
         if request.POST:
             page_index += 1
             print request.POST
