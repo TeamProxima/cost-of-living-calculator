@@ -186,3 +186,4 @@ class Info(models.Model):
     class Meta:
         managed = False
         db_table = 'info'
+        unique_together = ("country", "city")
