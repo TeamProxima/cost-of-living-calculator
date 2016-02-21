@@ -2,6 +2,7 @@ from django.shortcuts import redirect,render
 from django.template import RequestContext
 from json import dumps, loads, JSONEncoder, JSONDecoder
 
+from models import *
 
 def home(request):
     '''Show country and city selection'''
