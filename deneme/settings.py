@@ -59,11 +59,6 @@ WSGI_APPLICATION = 'deneme.wsgi.application'
 
 DATABASES = {
     'default': {
-<<<<<<< HEAD
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
-    }
-=======
         'ENGINE': 'django.db.backends.mysql',
 	'NAME': 'test',
         'USER': 'root',
@@ -71,7 +66,6 @@ DATABASES = {
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
 	}
->>>>>>> 9f93657279c2bf2b49b535b73bd9eb037bc6ec22
 }
 
 # Internationalization

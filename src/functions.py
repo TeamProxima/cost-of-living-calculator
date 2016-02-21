@@ -1,4 +1,4 @@
-def meal_cost(meal_types, veg_ratio, in_ratio, restaurant_ratio, prices):
+def meal_cost(meal_types, veg_ratio, out_meal_count, restaurant_ratio, prices):
     """
     meal_types: string array containing some of "Breakfast", "Lunch" and "Dinner"
     veg_ratio: ratio of eating vegatables
@@ -6,27 +6,28 @@ def meal_cost(meal_types, veg_ratio, in_ratio, restaurant_ratio, prices):
     restaurant_ratio: ratio of eating at restaurant
     """
 
-    inexp_rest = 15.0
-    fastfood_rest = 15.0
-    coke = 2.55
-
-    milk = 2.6
-    bread = 1.27
-    rice = 4.42
-    egg = 5.67
-    cheese = 15.39
-    chicken = 12.66
-    beef = 42.81
-    apple = 3.23
-    banana = 5.74
-    orange = 3.24
-    tomato = 3.16
-    potato = 2.93
-    onion = 2.24
-    lettuce = 1.94
-    water = 1.19
-
+    inexp_rest = prices[0]
+    fastfood_rest = prices[2]
+    coke = prices[6]
+    milk = prices[8]
+    bread = prices[9]
+    rice = prices[10]
+    egg = prices[11]
+    cheese = prices[12]
+    chicken = prices[13]
+    beef = prices[14]
+    apple = prices[15]
+    banana = prices[16]
+    orange = prices[17]
+    tomato = prices[18]
+    potato = prices[19]
+    onion = prices[20]
+    lettuce = prices[21]
+    water = prices[22]
+    
     total = 0
+    
+    in_ratio = (len(meal_types)*7 - out_meal_count)/(len(meal_types)*7)
 
     breakfast_at_home = milk / 4 + bread / 5 + egg / 12 + cheese / 20 + water / 3
     breakfast_at_outside = breakfast_at_home * 2
@@ -55,18 +56,16 @@ def meal_cost(meal_types, veg_ratio, in_ratio, restaurant_ratio, prices):
     return total
 
 def beer_cigarette_cost(beer_count,cigarette_count, prices):
-    d_beer_res = 8.5
-    i_beer_res = 10.0
-
-    d_beer_market = 5.58
-    i_beer_market = 7.64
-
-    cigarette = 10.0
+    d_beer_res = prices[3]
+    i_beer_res = prices[4]
+    d_beer_market = prices[24]
+    i_beer_market = prices[25]
+    cigarette = prices[26]
 
     total = ((d_beer_market + d_beer_res + (i_beer_market + i_beer_res)*5/3.3)/4)*beer_count/7
     total += cigarette*cigarette_count/7
 
     return total
 
-print meal_cost(["Breakfast","Lunch","Dinner"], 0.7, 0.3, 0.7)
-print beer_cigarette_cost(1,4)
+#print meal_cost(["Breakfast","Lunch","Dinner"], 0.7, 0.3, 0.7)
+#print beer_cigarette_cost(1,4)

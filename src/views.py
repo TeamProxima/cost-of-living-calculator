@@ -3,7 +3,9 @@ from django.contrib.sessions import *
 from django.template import RequestContext
 from json import dumps, loads, JSONEncoder, JSONDecoder
 import random
+import MySQLdb
 
+from functions import *
 from models import *
 
 
@@ -40,6 +42,9 @@ def home(request):
         return redirect("/")
 
 
+country = None
+city = None
+
 def run(request):
     '''Ask questions to calculate price'''
     '''
@@ -69,22 +74,13 @@ def run(request):
 
     qlist = [questions, questions2]
     try:
+        global country,city
         if request.META['HTTP_REFERER'].split('/')[-1] == '':
             '''For country and city selection after index'''
             country = request.GET['country']
-            city = request.GET['city']
-<<<<<<< HEAD
-            db = MySQLdb.connect("localhost","root","root","test")
-            cursor = db.cursor()
-            print "select * from info where country='"+country+"' and city='"+city+"';"
-            cursor.execute("select * from info where country='"+country+"' and city='"+city+"';")
-            data = cursor.fetchone()
-            print data
-            db.close()
-=======
+            city = request.GET['city'] 
             session_handler(request)
 
->>>>>>> cb45ee546b9992b57318e40d9fe2efd43d363477
         if request.POST:
             request.session['page_index'] += 1
             request.session['answer'].update((request.POST.iterlists()))
@@ -94,7 +90,35 @@ def run(request):
              'piclink': pictures[random.randint(0,4)],
             'questions': qlist[request.session['page_index']]})
     except IndexError:
+        global country,city
         answers = request.session['answer']
+        num_of_beer = int(str(answers['beer_cigQ1'][0]))
+        num_of_cig = int(str(answers['beer_cigQ2'][0]))
+        meal_list = answers['mealQ1']
+        meals = []
+        for each in meal_list:
+            meals.append(str(each))
+        print meals
+        veg_ratio = 1-(int(str(answers['mealQ2'][0]))/100.0)
+        num_of_out_meal = int(str(answers['mealQ3'][0]))
+        restaurant_ratio = 1- (int(str(answers['mealQ4'][0]))/100.0)
+        print veg_ratio, num_of_out_meal, restaurant_ratio
+        
+        print 'nums beer cig:', num_of_beer, num_of_cig
+         
+        for key,value in answers.iteritems():
+            print key, value
+        db = MySQLdb.connect("localhost","root","root","test")
+        cursor = db.cursor()
+        print "select * from info where country='"+country+"' and city='"+city+"';"
+        cursor.execute("select * from info where country='"+country+"' and city='"+city+"';")
+        data = cursor.fetchone()
+        print data
+        db.close()
+        
+        daily_cost = meal_cost(meals, veg_ratio, num_of_out_meal, restaurant_ratio, data[2:])
+        print 'cost',daily_cost
+        
         '''
             'answers' has answers as a dictionary.
             Finished, calculate.
