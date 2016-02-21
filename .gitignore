@@ -1,20 +1,3 @@
-# User-specific stuff:
-DjangoApp/.idea/workspace.xml
-DjangoApp/.idea/tasks.xml
-DjangoApp/.idea/dictionaries
-DjangoApp/.idea/vcs.xml
-DjangoApp/.idea/jsLibraryMappings.xml
-
-# Sensitive or high-churn files:
-DjangoApp/.idea/dataSources.ids
-DjangoApp/.idea/dataSources.xml
-DjangoApp/.idea/sqlDataSources.xml
-DjangoApp/.idea/dynamic.xml
-DjangoApp/.idea/uiDesigner.xml
-
-# Gradle:
-DjangoApp/.idea/gradle.xml
-DjangoApp/.idea/libraries
 
 # Mongo Explorer plugin:
 .idea/mongoSettings.xml
@@ -22,6 +5,7 @@ DjangoApp/.idea/libraries
 ## File-based project format:
 *.iws
 
+.idea/*
 ## Plugin-specific files:
 
 # IntelliJ
@@ -35,4 +19,3 @@ DjangoApp/.idea/libraries
 
 *.pyc
 src/*.pyc
-DjangoApp/hackathon/settings.py
