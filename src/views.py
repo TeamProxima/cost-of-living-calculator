@@ -1,10 +1,34 @@
 from django.shortcuts import redirect,render
+from django.contrib.sessions import *
 from django.template import RequestContext
 from json import dumps, loads, JSONEncoder, JSONDecoder
+import random
 
 from models import *
 
-import MySQLdb
+
+pictures = [
+    'http://www.mrwallpaper.com/wallpapers/Golden-Gate-Bridge-1920x1080.jpg',
+    'http://cdn.superbwallpapers.com/wallpapers/world/machu-picchu-3709-1920x1200.jpg',
+    'http://tremendouswallpapers.com/wp-content/uploads/2014/12/Burj_Al_Arab.jpg',
+    'http://1920x1080hdwallpapers.com/image/201502/city/336/new-york-times-square.jpg',
+    'https://wallpaperscraft.com/image/spain_toledo_lights_dusk_hdr_93798_1920x1080.jpg'
+]
+
+
+def session_handler(request, new=True):
+    if new:
+        request.session['page_index'] = 0
+        request.session['answer'] = {}
+    else:
+        del request.session['answer']
+        del request.session['page_index']
+        return False
+    return True
+
+
+
+
 
 def home(request):
     '''Show country and city selection'''
@@ -33,9 +57,10 @@ def run(request):
 
     '''
 
+    global pictures
     questions = [{'id': 'mealQ1', 'type': 4, 'text': "What meals do you have?", 'alt':['Breakfast', 'Launch', 'Dinner']},
           {'id': 'mealQ2', 'type': 3, 'text': "What is your preference for meal?", 'range': range(100), 'alt':['Vegetable', 'Meat']},
-          {'id': 'mealQ3', 'type': 1, 'text': "How often do you go out for meal?", 'alt':['times a week']},
+          {'id': 'mealQ3', 'type': 1, 'text': "How often do you go out for meal?", 'alt':[' times a week']},
           {'id': 'mealQ4', 'type': 3, 'text': "What do you prefer?", 'range': range(100), 'alt': ['Restaurant', 'Fast Food']}
           ]
     questions2 = [{'id': 'beer_cigQ1', 'type': 1, 'text': "How many bottles of beer do you drink per week?", 'alt':[' ']},
@@ -43,12 +68,12 @@ def run(request):
           ]
 
     qlist = [questions, questions2]
-    page_index = 0
     try:
         if request.META['HTTP_REFERER'].split('/')[-1] == '':
             '''For country and city selection after index'''
             country = request.GET['country']
             city = request.GET['city']
+<<<<<<< HEAD
             db = MySQLdb.connect("localhost","root","root","test")
             cursor = db.cursor()
             print "select * from info where country='"+country+"' and city='"+city+"';"
@@ -56,15 +81,26 @@ def run(request):
             data = cursor.fetchone()
             print data
             db.close()
+=======
+            session_handler(request)
+
+>>>>>>> cb45ee546b9992b57318e40d9fe2efd43d363477
         if request.POST:
-            page_index += 1
-            print request.POST
-        print page_index
+            request.session['page_index'] += 1
+            request.session['answer'].update((request.POST.iterlists()))
+
         return render(request, 'questions.html',
-                    {'message': '',
-                    'questions': qlist[page_index]})
+            {'message': '',
+             'piclink': pictures[random.randint(0,4)],
+            'questions': qlist[request.session['page_index']]})
+    except IndexError:
+        answers = request.session['answer']
+        '''
+            'answers' has answers as a dictionary.
+            Finished, calculate.
+        '''
+        session_handler(request, False)
+        return redirect("/")
     except Exception as e:
         print e
-        return redirect("/")
-        page_index = 0
         return redirect("/")
