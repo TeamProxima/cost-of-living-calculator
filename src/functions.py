@@ -1,4 +1,4 @@
-def meal_cost(meal_types, veg_ratio, in_ratio, restaurant_ratio):
+def meal_cost(meal_types, veg_ratio, in_ratio, restaurant_ratio, prices):
     """
     meal_types: string array containing some of "Breakfast", "Lunch" and "Dinner"
     veg_ratio: ratio of eating vegatables
@@ -54,7 +54,7 @@ def meal_cost(meal_types, veg_ratio, in_ratio, restaurant_ratio):
 
     return total
 
-def beer_cigarette_cost(beer_count,cigarette_count):
+def beer_cigarette_cost(beer_count,cigarette_count, prices):
     d_beer_res = 8.5
     i_beer_res = 10.0
 

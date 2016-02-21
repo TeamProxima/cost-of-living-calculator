@@ -129,7 +129,7 @@ class DjangoSession(models.Model):
 
 class Info(models.Model):
     country = models.CharField(max_length=255, blank=True)
-    city = models.CharField(max_length=255, blank=True, primary_key=True)
+    city = models.CharField(max_length=255, blank=True)
     p1 = models.FloatField(blank=True, null=True)
     p2 = models.FloatField(blank=True, null=True)
     p3 = models.FloatField(blank=True, null=True)
@@ -182,8 +182,9 @@ class Info(models.Model):
     p50 = models.FloatField(blank=True, null=True)
     p51 = models.FloatField(blank=True, null=True)
     p52 = models.FloatField(blank=True, null=True)
+   
 
+ 
     class Meta:
-        managed = False
         db_table = 'info'
-        unique_together = ("country", "city")
+       
