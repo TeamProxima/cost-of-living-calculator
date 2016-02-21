@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Proxima</title>
 
-
+    </head>
 
 
         <style>
@@ -23,15 +23,15 @@ body{
 
 .body{
     position: absolute;
-    top: -20px;
-    left: -20px;
-    right: -40px;
-    bottom: -40px;
-    width: 1440px;
-    height: 720px;
-    background-image: url(https://newevolutiondesigns.com/images/freebies/city-wallpaper-18.jpg);
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: url({{ piclink }}) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
-    background-position:50% 50%;
     /*-webkit-filter: blur(5px);*/
     z-index: -1;
 }
@@ -50,22 +50,6 @@ input[type=text]{
     font-weight: 400;
     padding: 4px;
 }
-
-input[type=button]{
-    width: 120px;
-    height: 25px;
-    background: #fff;
-    border: 1px solid #fff;
-    cursor: pointer;
-    border-radius: 2px;
-    color: #a18d6c;
-    font-family: 'Exo', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    padding: 6px;
-    margin-top: 10px;
-}
-
 
 input[type=text]:focus{
     outline: none;
@@ -98,11 +82,13 @@ select {
 }
 
 #questioncontainer {
-
+    position: absolute;
+    top: 50px;
+    margin-left: 2in;
 }
 
 .question {
-    display: table-caption;
+    display: inline-block;
     width: 500px;
     height: 100px;
     border-radius: 15px;
@@ -110,7 +96,7 @@ select {
     border-color: #a18d6c;
     border-width: 2px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    opacity: 0.5;
+    opacity: 0.6;
 
 }
 .question
@@ -118,35 +104,45 @@ select {
     top:0;
     left:0;
     margin:0;
-
-    -moz-transition:all 2s;
-    -webkit-transition:all 2s;
-    -o-transition:all 2s;
-    transition:all 2s;
+    background-color: rgba(0,0,0,0.2) ;
+    transition: all .2s ease-in-out;
 }
+
 
 .question:hover
 {
 
-    margin-left: 5in;
-    margin-top:
     opacity: 1;
-
-    -moz-transition:all 2s;
-    -webkit-transition:all 2s;
-    -o-transition:all 2s;
-    transition:all 2s;
+    background-color: rgba(0,0,0,0.8) ;
+    transition: all .2s ease-in-out;
     -webkit-transform: scale(1.4);
-
 }
+
+.next {
+    width: 120px;
+    height: 30px;
+    background: #fff;
+    border: 1px solid #fff;
+    cursor: pointer;
+    border-radius: 2px;
+    color: #a18d6c;
+    font-family: 'Exo', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 6px;
+    margin-top: 2px;
+    position: absolute;
+    right:60px;
+    bottom:60px;
+
 }
 </style>
-
+<body>
 {% load staticfiles %}
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
-<link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' rel='stylesheet' type='text/css'>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="https://code.jquery.com/ui/1.12.0-beta.1/jquery-ui.min.js"></script>
+<link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' rel='stylesheet' type='text/css'>
 
 <div class="body"></div>
 {% if message %}
@@ -154,105 +150,70 @@ select {
 {% endif %}
 
 <div id="questioncontainer">
-{% if questions %}
-   There are {{ questions|length }} question(s) in this category:
-<form action="/questions" method="POST">
-   {% for q in questions %}
-       <div class='question' style=" color:white; padding:20px; border-style: solid;">
-            <h2>{{ q.text }}</h2>
+    {% if questions %}
+       There are {{ questions|length }} question(s) in this category:
+        <form action="/questions" method="POST">
+       {% for q in questions %}
+           <div class='question' style=" color:white; padding:20px; border-style: solid;">
+                <div class="blur"></div>
+                <h2>{{ q.text }}</h2>
 
-            {% if q.type == 0 %}
-                {% for a in q.alt %}
-                  <input class="answer" type="radio" name="{{ q.id }}" value="{{ a }}"> "{{ a }}" <br>
-                {% endfor %}
-            {% endif %}
-
-           {% if q.type == 1 %}
-               {% for a in q.alt %}
-                  <input class="answer" type="text" name="{{ q.id }}">{{ a }}<br>
-               {% endfor %}
-           {% endif %}
-
-           {% if q.type == 2 %}
-                <select class="answer" name="{{ q.id }}">
+                {% if q.type == 0 %}
                     {% for a in q.alt %}
-                        <option value="{{ a }}">"{{ a }}"</option>
+                      <input class="answer" type="radio" name="{{ q.id }}" value="{{ a }}"> "{{ a }}" <br>
                     {% endfor %}
-                </select>
-           {% endif %}
+                {% endif %}
 
-           {% if q.type == 3 %}
-                <label for="number">Number</label>
-                    <select class="answer number" name="{{ q.id }}">
-                        {% for i in q.range %}
-                          <option>{{ i }}</option>
+               {% if q.type == 1 %}
+                   {% for a in q.alt %}
+                      <input class="answer" type="text" name="{{ q.id }}">{{ a }}<br>
+                   {% endfor %}
+               {% endif %}
+
+               {% if q.type == 2 %}
+                    <select class="answer" name="{{ q.id }}">
+                        {% for a in q.alt %}
+                            <option value="{{ a }}">"{{ a }}"</option>
                         {% endfor %}
                     </select>
-                    <div class='slider'></div>{{ q.alt.0 }}{{ q.alt.1 }}
-            {% endif %}
+               {% endif %}
 
-            {% if q.type == 4 %}
-                {% for a in q.alt %}
-                    <input class="answer" type="checkbox" name={{ q.id }} value="{{ a }}"> "{{ a }}" <br>
-                {% endfor %}
+               {% if q.type == 3 %}
+                    <label for="number">Number</label>
+                        <select class="answer number" name="{{ q.id }}">
+                            {% for i in q.range %}
+                              <option>{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class='slider'></div>{{ q.alt.0 }}{{ q.alt.1 }}
+                {% endif %}
 
-            {% endif %}
-       </div>
-   {% endfor %}
+                {% if q.type == 4 %}
+                    {% for a in q.alt %}
+                        <input class="answer" type="checkbox" name={{ q.id }} value="{{ a }}"> "{{ a }}" <br>
+                    {% endfor %}
 
-{% else %}
-   There are no questions in the system.
+                {% endif %}
+           </div>
+       {% endfor %}
 
-{% endif %}
+    {% else %}
+       There are no questions in the system.
 
-    {% csrf_token %}
-        <input type='submit' type="button" value='Submit' />
+    {% endif %}
+
+        {% csrf_token %}
+            <input type='submit' class='next' value='Next' />
     </form>
-<script>
 
-//--------------------------------------------VARIABLES---------------------------------------------//
-/*
-        $(".question").mouseenter(
-          function() {
-              $(this).animate({
-                width: "50%",
-                height: "150px",
-                opacity: 1,
-                marginLeft: "3in",
-                fontSize: "1.5em",
-                borderWidth: "2px"
-              }, 250, 'linear');
-              $(this).css('z-index', 5)
-          });
-        $(".question").mouseleave(
+    <script>
+        $(".slider").each(
             function() {
-              $(this).animate({
-                width: "35%",
-                height: "100px",
-                marginLeft: "1in",
-                opacity: 0.5,
-                fontSize: "0.5em",
-                borderWidth: "1px"
-              }, 400, 'linear' );
-                $(this).css('z-index', 1)
-          });
-
-*/
-
-//-----------------------------------------BUTTON CLICK FUNCTIONS------------------------------------//
-
-
-    $(".slider").each(
-        function() {
-        $(this).slider();
-
-     });
-
-
-
-</script>
+            $(this).slider();
+        });
+    </script>
 </div>
-</div>
+
 </body>
 </html>
 {% endblock %}
