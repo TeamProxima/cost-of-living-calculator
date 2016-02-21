@@ -3,7 +3,7 @@ from django.contrib.sessions import *
 from django.template import RequestContext
 from json import dumps, loads, JSONEncoder, JSONDecoder
 import random
-import MySQLdb
+#import MySQLdb
 
 from functions import *
 from models import *
@@ -67,11 +67,20 @@ def run(request):
           {'id': 'mealQ3', 'type': 1, 'text': "How often do you go out for meal?", 'alt':['times a week.']},
           {'id': 'mealQ4', 'type': 3, 'text': "What do you prefer?", 'range': range(101), 'alt': ['Restaurant', 'Fast Food']}
           ]
+
     questions2 = [{'id': 'beer_cigQ1', 'type': 1, 'text': "How many bottles of beer do you drink per week?", 'alt':[' ']},
           {'id': 'beer_cigQ2', 'type': 1, 'text': "How many packets of cigarette do you smoke per week?", 'alt':[' ']}
           ]
 
-    qlist = [questions, questions2]
+    questions3 = [{'id': 'accoQ1', 'type': 0, 'text': "Where do you want to live?", 'alt':['In city centre', 'Outside of city centre']},
+          {'id': 'accoQ2', 'type': 0, 'text': "How many bedrooms?", 'alt':['1', '3']}
+          ]
+    questions4 = [{'id': 'miscQ1', 'type': 1, 'text': "How many pieces clothes do you buy?", 'alt':['pieces per month']},
+          {'id': 'miscQ2', 'type': 1, 'text': "How often do you go to cinema?", 'alt':['times a month']},
+          {'id': 'miscQ2', 'type': 0, 'text': "Do you want to have gym membership?", 'alt':['Yes', 'No']}
+          ]
+
+    qlist = [questions, questions2, questions3, questions4]
     try:
         global country,city
         if request.META['HTTP_REFERER'].split('/')[-1] == '':
@@ -89,6 +98,7 @@ def run(request):
              'piclink': pictures[random.randint(0,6)],
             'questions': qlist[request.session['page_index']]})
     except IndexError:
+        '''
         global country,city
         answers = request.session['answer']
         num_of_beer = int(str(answers['beer_cigQ1'][0]))
@@ -102,9 +112,9 @@ def run(request):
         num_of_out_meal = int(str(answers['mealQ3'][0]))
         restaurant_ratio = 1- (int(str(answers['mealQ4'][0]))/100.0)
         print veg_ratio, num_of_out_meal, restaurant_ratio
-        
+
         print 'nums beer cig:', num_of_beer, num_of_cig
-         
+
         for key,value in answers.iteritems():
             print key, value
         db = MySQLdb.connect("localhost","root","root","test")
@@ -114,11 +124,10 @@ def run(request):
         data = cursor.fetchone()
         print data
         db.close()
-        
+
         daily_cost = meal_cost(meals, veg_ratio, num_of_out_meal, restaurant_ratio, data[2:])
         print 'cost',daily_cost
-        
-        '''
+
             'answers' has answers as a dictionary.
             Finished, calculate.
         '''

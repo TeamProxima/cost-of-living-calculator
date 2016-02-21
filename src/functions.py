@@ -9,6 +9,7 @@ def meal_cost(meal_types, veg_ratio, out_meal_count, restaurant_ratio, prices):
     inexp_rest = prices[0]
     fastfood_rest = prices[2]
     coke = prices[6]
+
     milk = prices[8]
     bread = prices[9]
     rice = prices[10]
@@ -24,9 +25,9 @@ def meal_cost(meal_types, veg_ratio, out_meal_count, restaurant_ratio, prices):
     onion = prices[20]
     lettuce = prices[21]
     water = prices[22]
-    
+
     total = 0
-    
+
     in_ratio = (len(meal_types)*7 - out_meal_count)/(len(meal_types)*7)
 
     breakfast_at_home = milk / 4 + bread / 5 + egg / 12 + cheese / 20 + water / 3
@@ -58,8 +59,10 @@ def meal_cost(meal_types, veg_ratio, out_meal_count, restaurant_ratio, prices):
 def beer_cigarette_cost(beer_count,cigarette_count, prices):
     d_beer_res = prices[3]
     i_beer_res = prices[4]
+
     d_beer_market = prices[24]
     i_beer_market = prices[25]
+
     cigarette = prices[26]
 
     total = ((d_beer_market + d_beer_res + (i_beer_market + i_beer_res)*5/3.3)/4)*beer_count/7
@@ -67,5 +70,55 @@ def beer_cigarette_cost(beer_count,cigarette_count, prices):
 
     return total
 
-#print meal_cost(["Breakfast","Lunch","Dinner"], 0.7, 0.3, 0.7)
-#print beer_cigarette_cost(1,4)
+def accomodation_cost(location,bedroom_count,prices):
+	in_city_centre_1bedroom = prices[44]
+	in_city_centre_3bedrooms = prices[46]
+	outside_city_centre_1bedroom = prices[45]
+	outside_city_centre_3bedrooms = prices[47]
+
+	total = 0;
+
+	if location == "In city centre":
+		if bedroom_count == "1":
+			return in_city_centre_1bedroom/30.0
+		else:
+			return in_city_centre_3bedrooms/30.0
+	else:
+		if bedroom_count == "1":
+			return outside_city_centre_1bedroom/30.0
+		else:
+			return outside_city_centre_3bedrooms/30.0
+
+def utilities_cost(bedroom_count,prices):
+	basic_cost = prices[34]
+	internet_cost = prices[36]
+	total = 0
+
+	total += internet_cost
+
+	if bedroom_count == "1":
+		total += basic_cost
+	else:
+		total += basic_cost*1.7
+
+	return total/30.0
+
+def misc_cost(clothes_count, cinema_count, fitness, prices):
+	clothes_cost = (prices[40] + prices[41] + prices[42] + prices[43])/4
+	cinema_cost = prices[39]
+	fitness_cost = prices[37]
+	total = 0;
+
+	total += clothes_cost*clothes_count/30.0
+	total += cinema_cost*cinema_count/30.0
+	if fitness == "Yes"
+		total += fitness_cost/30.0
+
+	return total
+
+
+
+
+
+
+
