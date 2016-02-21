@@ -182,9 +182,9 @@ class Info(models.Model):
     p50 = models.FloatField(blank=True, null=True)
     p51 = models.FloatField(blank=True, null=True)
     p52 = models.FloatField(blank=True, null=True)
-    p53 = models.FloatField(blank=True, null=True)
+   
 
+ 
     class Meta:
-        managed = False
         db_table = 'info'
-        unique_together = ("country", "city")
+       

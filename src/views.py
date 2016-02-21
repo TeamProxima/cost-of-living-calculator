@@ -4,6 +4,8 @@ from json import dumps, loads, JSONEncoder, JSONDecoder
 
 from models import *
 
+import MySQLdb
+
 def home(request):
     '''Show country and city selection'''
     try:
