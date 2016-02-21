@@ -1,5 +1,5 @@
 """
-Django settings for hackathon project.
+Django settings for deneme project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'o@3qi60q35)5)qew-!7l(=&)kn@r(^9j3@ov0qn)@h+mglzjh_'
+SECRET_KEY = 'wx3-$6=&d^dd)g8o2_g0$16)+_v5!#&!c&u7#d4-3ndl%p#mja'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -48,9 +48,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'hackathon.urls'
+ROOT_URLCONF = 'deneme.urls'
 
-WSGI_APPLICATION = 'hackathon.wsgi.application'
+WSGI_APPLICATION = 'deneme.wsgi.application'
 
 
 # Database
@@ -58,9 +58,13 @@ WSGI_APPLICATION = 'hackathon.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.mysql',
+	'NAME': 'test',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+	}
 }
 
 # Internationalization
@@ -82,17 +86,17 @@ USE_TZ = True
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR,  'templates'),
-    '/Users/Dodo/Documents/hackathon/templates',
+    '/home/blacksimit/tmp/deneme/templates',
 )
-
+ 
 STATIC_URL = '/static/'
-
+ 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-
+ 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, STATIC_URL),
-    '/Users/Dodo/Documents/hackathon/static/',
+    '/home/blacksimit/tmp/deneme/static/',
 )
