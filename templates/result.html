@@ -3,80 +3,38 @@
   <head>
     <meta charset="UTF-8">
     <title>Proxima</title>
-
-      <style>
+    <style>
             @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
             @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
 
-body{
-	margin: 0;
-	padding: 0;
-	background: #fff;
-	color: #fff;
-	font-family: Arial;
-	font-size: 12px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-	background: url(https://wallpaperscraft.com/image/plane_sky_clouds_106153_1920x1080.jpg) center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-	background-size: cover;
-    background-attachment: fixed;
-    background-position:50% 50%;
-	z-index: -1;
-}
+        body{
+            margin: 0;
+            padding: 0;
+            background: #fff;
+            color: #fff;
+            font-family: Arial;
+            font-size: 12px;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            background: url(https://wallpaperscraft.com/image/plane_flight_sky_beautiful_evening_86920_1920x1080.jpg) center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position:50% 50%;
+            z-index: -1;
+        }
+      </style>
 
-
-.grad{
-	position: absolute;
-	top: -20px;
-	left: -20px;
-	right: -40px;
-	bottom: -40px;
-	width: auto;
-	height: auto;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
-	z-index: 1;
-	opacity: 0.7;
-}
-
-.header{
-	position: absolute;
-	top: calc(50% - 35px);
-	left: calc(50% - 255px);
-	z-index: 2;
-}
-
-.header div{
-	float: left;
-	color: #fff;
-	font-family: 'Exo', sans-serif;
-	font-size: 35px;
-	font-weight: 200;
-}
-
-.header div span{
-	color: #5379fa !important;
-}
-
-.header #pname{
-    position: absolute !important;
-}
-
-
-::-webkit-input-placeholder{
-   color: rgba(255,255,255,0.6);
-}
-
-::-moz-input-placeholder{
-   color: rgba(255,255,255,0.6);
-}
-    </style>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+    <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}css/chartdiv.css>
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/pie.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 
   </head>
 
@@ -85,8 +43,69 @@ body{
 		<div class="final"></div>
             <h1>FINAL PAGE</h1>
 		</div>
+        <script type="text/javascript">
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer", {
 
+                title:{
+                    text:"Fortune Global 500 Companies by Country"
 
+                },
+                            animationEnabled: true,
+                axisX:{
+                    interval: 1,
+                    gridThickness: 0,
+                    labelFontSize: 10,
+                    labelFontStyle: "normal",
+                    labelFontWeight: "normal",
+                    labelFontFamily: "Lucida Sans Unicode"
+
+                },
+                axisY2:{
+                    interlacedColor: "rgba(1,77,101,.2)",
+                    gridColor: "rgba(1,77,101,.1)"
+
+                },
+
+                data: [
+                {
+                    type: "bar",
+                    name: "companies",
+                    axisYType: "secondary",
+                    color: "#014D65",
+                    dataPoints: [
+
+                    {y: 5, label: "Sweden"  },
+                    {y: 6, label: "Taiwan"  },
+                    {y: 7, label: "Russia"  },
+                    {y: 8, label: "Spain"  },
+                    {y: 8, label: "Brazil"  },
+                    {y: 8, label: "India"  },
+                    {y: 9, label: "Italy"  },
+                    {y: 9, label: "Australia"  },
+                    {y: 12, label: "Canada"  },
+                    {y: 13, label: "South Korea"  },
+                    {y: 13, label: "Netherlands"  },
+                    {y: 15, label: "Switzerland"  },
+                    {y: 28, label: "Britain" },
+                    {y: 32, label: "Germany"   },
+                    {y: 32, label: "France"  },
+                    {y: 68, label: "Japan"   },
+                    {y: 73, label: "China"},
+                    {y: 132, label: "US" }
+                    ]
+                }
+
+                ]
+            });
+
+    chart.render();
+    }
+    </script>
+        <div id="chartdiv"></div>
+        <div id="chartContainer" style="height: 300px; width: 300px;"> </div>
+        <script src={{ STATIC_URL }}js/pie.js></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
   </body>
 </html>
 

@@ -1,287 +1,86 @@
-	{% block content %}
-	<!DOCTYPE html>
-	<html >
-	  <head>
-		<meta charset="UTF-8">
-		<title>Proxima</title>
-
-		</head>
-
-
-			<style>
-		  @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
-		  @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
+{% block content %}
+<!DOCTYPE html>
+<html >
+    <head>
+        <style>
+            @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
+            @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
 
 
-	body{
-        margin: 0;
-		padding: 0;
-		background: #fff;
-		color: #fff;
-		font-family: 'Exo', sans-serif;
-		font-size: 12px;
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		right: 0px;
-		bottom: 0px;
-		background: url({{ STATIC_URL }}{{ piclink }}) center center fixed;
-		-webkit-background-size: cover;
-		-moz-background-size: cover;
-		-o-background-size: cover;
-		background-size: cover;
-        background-attachment: fixed;
-        background-position:50% 50%;
-        z-index: -1;
-	}
+            body {
+                background: url({{ STATIC_URL }}{{ piclink }}) center center fixed !important;
+            }
 
-	input[type=text]{
-		width: 150px;
-		height: 20px;
-		background: transparent;
-		border: 1px solid rgba(255,255,255,0.6);
-		border-radius: 2px;
-		color: white;
-		font-family: 'Exo', sans-serif;
-		font-size: 16px;
-		font-weight: 400;
-		padding: 4px;
-	}
+            .slider {
+                width: 400px;
+                height: 50px;
+            }
+        </style>
 
-	input[type=text]:focus{
-		outline: none;
-		border: 1px solid rgba(255,255,255,0.9);
-	}
+        <meta charset="UTF-8">
+        <title>Proxima</title>
+        {% load staticfiles %}
+        <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/ui/1.12.0-beta.1/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/questions.js"></script>
+        <link rel='stylesheet' type='text/css' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css'>
+        <link rel='stylesheet' type='text/css' href={{ STATIC_URL }}css/questions.css>
+    </head>
 
-	::-webkit-input-placeholder{
-	   color: rgba(255,255,255,0.6);
-	}
 
-	::-moz-input-placeholder{
-	   color: rgba(255,255,255,0.6);
-	}
+    <body>
 
-	select {
-		width: 25px;
-		height: 20px;
-		background: #fff;
-		border: 1px solid #fff;
-		border-radius: 1px;
-		color: #a18d6c;
-		font-family: 'Exo', sans-serif;
-		font-size: 12px;
-		font-weight: 400;
-		-webkit-appearance: none;
-	}
 
-	#questioncontainer {
-		position: absolute;
-		margin-top: 1in;
-		margin-left: 2in;
-	}
+    {% if message %} <p id='question'>{{message}}</p> {% endif %}
+    {% if page_headers %} <div id="locheader"><h1>{{ page_headers.0 }}/{{ page_headers.1 }}</h1> </div>{% endif %}
+    <div id="questioncontainer">
 
-	.question {
-		display: block;
-		width: 500px;
-		height: 100px;
-        margin-bottom: 20px;
-		border-radius: 15px;
-		background: transparent;/*linear-gradient(#a18fa0, #a18d6c);*/
-		border-color: lightslategrey;
-		border-width: 1px;
-        border-style: inset;
-		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-		opacity: 0.8;
-        top:0;
-		left:0;
-		background-color: rgba(0,0,0,0.4) ;
-		transition: all .2s ease-in-out;
-
-	}
-
-	.question:hover
-	{
-		opacity: 1;
-		background-color: rgba(0,0,0,0.8) ;
-		transition: all .2s ease-in-out;
-		-webkit-transform: scale(1.2);
-	}
-
-	.next {
-		width: 120px;
-		height: 30px;
-		background: #fff;
-		border: 1px solid #fff;
-		cursor: pointer;
-		border-radius: 2px;
-		color: #a18d6c;
-		font-family: 'Exo', sans-serif;
-		font-size: 16px;
-		font-weight: 400;
-		position: absolute;
-		left:425px;
-        bottom: -150px;
-        margin-bottom: 1in;
-    }
-
-    .slider {
-        width: 400px;
-        height: 50px;
-    }
-
-    .info {
-        background-image:url(http://icons.iconarchive.com/icons/rimshotdesign/nod2/512/Toolbar-Regular-Get-Info-icon.png);
-        background-size: cover;
-        position:absolute; right:10px; margin-top:-15px; height:20px; width:20px;
-    }
-
-    .infotext {
-        background: #000000;
-        -webkit-border-radius: 23px;
-        -moz-border-radius: 23px;
-        border-radius: 23px;
-        border: lightgrey solid 1px;
-        visibility:hidden; height:100px; width:300px;
-        position:absolute; left:50px; top:-15px;
-        background-color: rgba(0,0,0,0.5) ;
-        background-size: 200px 100px;
-    }
-
-    .infotext:after {
-        border-style: solid;
-        border-width: 15px 15px 15px 0;
-        border-color: transparent #000000;
-        display: block;
-        z-index: 1;
-    }
-
-    .infotext:before {
-        content: '';
-        position: absolute;
-        left:-15px;
-        border-style: solid;
-        border-width: 15px 15px 15px 0;
-        border-color: transparent lightgrey;
-        display: block;
-        width: 0;
-        z-index: 0;
-        top: 15px;
-    }
-	</style>
-	<body>
-	{% load staticfiles %}
-	<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
-	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.0-beta.1/jquery-ui.min.js"></script>
-	<link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' rel='stylesheet' type='text/css'>
-
-	<div class="body"></div>
-	{% if message %}
-	<p id='question'>{{message}}</p>
-	{% endif %}
-
-	<div id="questioncontainer">
-
-		{% if questions %}
-			<form action="/questions" method="POST">
-			{% for q in questions %}
-			   <div class='question' style=" color:white; padding:20px; border-style: solid;">
-					<div class='info'>
+        {% if questions %}
+            <form action="/questions" method="POST">
+            {% for q in questions %}
+               <div class='question'>
+                    <div class='info'>
                         <div class='infotext'>{{ q.info }}</div>
                     </div>
 
-					<h2>{{ q.text }}</h2>
+                   <h2>{{ q.text }}</h2>
+                   {% if q.type == 0 %}
+                       {% for a in q.alt %} <input class="answer" type="radio" name="{{ q.id }}" value="{{ a }}"> {{ a }} <br> {% endfor %}
+                   {% endif %}
 
-					{% if q.type == 0 %}
-						{% for a in q.alt %}
-						  <input class="answer" type="radio" name="{{ q.id }}" value="{{ a }}"> {{ a }} <br>
-						{% endfor %}
-					{% endif %}
+                   {% if q.type == 1 %}
+                       {% for a in q.alt %} <input class="answer" type="text" name="{{ q.id }}">&nbsp;{{ a }}<br> {% endfor %}
+                   {% endif %}
 
-				   {% if q.type == 1 %}
-					   {% for a in q.alt %}
-						  <input class="answer" type="text" name="{{ q.id }}">&nbsp;{{ a }}<br>
-					   {% endfor %}
-				   {% endif %}
+                   {% if q.type == 2 %}
+                        <select class="answer" name="{{ q.id }}"> {% for a in q.alt %} <option value="{{ a }}">"{{ a }}"</option> {% endfor %} </select>
+                   {% endif %}
 
-				   {% if q.type == 2 %}
-						<select class="answer" name="{{ q.id }}">
-							{% for a in q.alt %}
-								<option value="{{ a }}">"{{ a }}"</option>
-							{% endfor %}
-						</select>
-				   {% endif %}
-
-				   {% if q.type == 3 %}
-						<label for="number"></label>
+                   {% if q.type == 3 %}
+                        <label for="number"></label>
                             <div class="slidercontainer">
                                 <select class="answer number" name="{{ q.id }}" disabled="disabled">
-                                    {% for i in q.range %}
-                                      <option>{{ i }}</option>
-                                    {% endfor %}
+                                    {% for i in q.range %} <option>{{ i }}</option> {% endfor %}
                                 </select>
                                 <div class='slider' style="left:50px;"></div>
                             </div>
                        <div style="position:absolute; left:20px; margin-top:5px;">{{ q.alt.0 }}</div>
                        <div style="position:absolute; right:40px; margin-top:5px;">{{ q.alt.1 }}</div>
-					{% endif %}
+                    {% endif %}
 
-				   {% if q.type == 4 %}
-						{% for a in q.alt %}
-							    <input class="answer" type="checkbox" name={{ q.id }} value="{{ a }}"> {{ a }} <br>
-						{% endfor %}
+                   {% if q.type == 4 %}
+                        {% for a in q.alt %} <input class="answer" type="checkbox" name={{ q.id }} value="{{ a }}"> {{ a }} <br> {% endfor %}
+                   {% endif %}
+               </div>
+            {% endfor %}
 
-				   {% endif %}
-			   </div>
-			{% endfor %}
+        {% endif %}
+        {% csrf_token %}
+                <input type='submit' class='next' value='Next' />
+            </form>
+    </div>
 
-			{% endif %}
-
-			{% csrf_token %}
-				<input type='submit' class='next' value='Next' />
-		</form>
-
-		<script>
-			$(".slider").each(
-				function() {
-                    $(this).slider({
-                      range: "max",
-                      min: 0,
-                      max: 100,
-                      value: 50,
-                      slide: function( event, ui ) {
-                          $(this).closest('.slidercontainer').find('.number').val(ui.value);
-                      },
-                      create: function( event ) {
-                          $(this).closest('.slidercontainer').find('.number').val(50);
-                      }
-                    });
-			});
-
-            $( ".info" ).mouseenter(function(){
-                var text = $(this).find('.infotext');
-                $(text).css('visibility','visible');
-
-            });
-
-            $( ".info" ).mouseleave(function() {
-                $( ".infotext" ).each(function(){
-                    $(this).css('visibility','hidden');
-                });
-            });
-
-            $( "option" ).mouseleave(function() {
-                $( ".infotext" ).each(function(){
-                    $(this).css('visibility','hidden');
-                });
-            });
-
-            $('.next').click(function() {
-                $('.number').removeAttr('disabled');
-            });
-		</script>
-	</div>
-
-	</body>
-	</html>
-	{% endblock %}
+    </body>
+</html>
+{% endblock %}
