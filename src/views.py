@@ -83,7 +83,7 @@ def run(request):
             request.session['answer'].update((request.POST.iterlists()))
             print request.session['answer']
 
-        return render(request, 'result.html',
+        return render(request, 'questions.html',
             {'message': '',
              'piclink': "pics/" + str(random.randint(0, 6)) + ".jpg",
             'questions': qlist[request.session['page_index']],

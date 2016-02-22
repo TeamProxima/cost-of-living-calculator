@@ -34,5 +34,6 @@ chart.addListener("rollOverSlice", function(e) {
 
 function handleRollOver(e){
   var wedge = e.dataItem.wedge.node;
+
   wedge.parentNode.appendChild(wedge);
 }
