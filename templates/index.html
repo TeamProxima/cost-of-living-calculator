@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <title>Proxima</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
       <style>
             @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
@@ -148,6 +151,12 @@ body{
 ::-moz-input-placeholder{
    color: rgba(255,255,255,0.6);
 }
+
+.login {
+    position:absolute;
+    margin-top:16px;
+    margin-left:-1in;
+}
     </style>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 
@@ -161,13 +170,64 @@ body{
 		</div>
 		<br>
 		<div class="login">
-			<form method="get" action="/questions">
-				<input type="text" placeholder="country" name="country"><br>
-				<input type="text" placeholder="city" name="city"><br>
-				<input type="submit" name="search" value="Search">
-			</form>
+			<table style="border-spacing: 0px; width: 100%; margin-top: 5px; margin-bottom: 1px;">
+    <tr>
+        <td style="padding-left:8px; padding-top: 0px; padding-bottom: 0px; vertical-align: middle; width: 680px; text-align: right;">
+            <div style="display: inline-block; width: 100%; margin-top: 10px; margin-bottom: 10px; text-align: right; vertical-align: bottom">
+                <nav style="display: inline-block; vertical-align: middle;">
+                    <div class="standard_margin_inlineblock">
+                        <form action="questions" method="get"
+                              id="menu_dispatch_form" style="display: inline; padding: 0; margin:0;">
+                            <input id="city_selector_menu_city_id" size="35" type="text"
+                                   placeholder="Type a city"
+                                   class="ui-corner-all city-selector-menu"/>
+                            <input type="hidden" id="menu_city_id" name="country"/>
+                            <input type="hidden" id="name_menu_city_id" name="city"/>
+                        </form>
+                    </div>
+                    <script type="text/javascript">
+                        jQuery(document).ready(function ($) {
+                            jQuery('#city_selector_menu_city_id').autocomplete({
+                                source: 'search',
+                                minLength: 1,
+                                delay: 0,
+                                autoFocus: true,
+                                select: function (event, ui) {
+                                    event.preventDefault();
+                                    console.log(ui.item.label);
+                                    console.log(ui.item.desc);
+                                    $("#city_selector_menu_city_id").appendTo(".foo");
+                                    $("#city_selector_menu_city_id").val(ui.item.label + ", " + ui.item.desc);
+                                    $('#name_menu_city_id').val(ui.item.label);
+                                    $('#menu_city_id').val(ui.item.desc);
+                                    jQuery('#menu_dispatch_form').submit();
+                                },
+                                focus: function (event, ui) {
+                                    event.preventDefault();
+                                }
+                            }).keydown(function (e) {
+                                if (e.keyCode === 13) {
+                                    if ($('#menu_city_id').val() == '') {
+                                        e.preventDefault();
+                                    }
+                                    var val = $('#city_selector_menu_city_id').val();
+                                    $('#name_menu_city_id').val(val);
+                                }
+                            }).autocomplete("instance")._renderItem = function (ul, item) {
+                                return $("<li>")
+                                        .append("<a>" + item.label + ", " + item.desc + "</a>")
+                                        .appendTo(ul);
+                            }; // end autocompleter definition
+                            $('#city_selector_menu_city_id').toggleClass('city-selector-menu');
+                            $('#city_selector_menu_city_id').toggleClass('city-selector-menu');
+                        }); // end document ready
+                    </script>
+                </nav>
+            </div>
+        </td>
+    </tr>
+</table>
 		</div>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 
   </body>
 </html>

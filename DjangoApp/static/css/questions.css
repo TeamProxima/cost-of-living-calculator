@@ -160,3 +160,10 @@ select {
     width: 0;
     z-index: 0;
 }
+
+.ttext {
+    position:absolute;
+    margin-top:10px;
+    margin-left:10px;
+    
+}

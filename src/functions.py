@@ -27,6 +27,9 @@ def meal_cost(meal_types, veg_ratio, out_meal_count, restaurant_ratio, prices):
     water = prices[22]
 
     total = 0
+    breakfast_total = 0
+    lunch_total = 0
+    dinner_total = 0
 
     in_ratio = (len(meal_types)*7 - out_meal_count)/(len(meal_types)*7)
 
@@ -45,16 +48,18 @@ def meal_cost(meal_types, veg_ratio, out_meal_count, restaurant_ratio, prices):
 
     for meal in meal_types:
         if meal == "Breakfast":
-            total += in_ratio * breakfast_at_home + (1 - in_ratio) * breakfast_at_outside
+            breakfast_total += in_ratio * breakfast_at_home + (1 - in_ratio) * breakfast_at_outside
         elif meal == "Lunch":
-            total += in_ratio * lunch_at_home + (1 - in_ratio) * lunch_at_outside
+            lunch_total += in_ratio * lunch_at_home + (1 - in_ratio) * lunch_at_outside
         elif meal == "Dinner":
-            total += in_ratio * dinner_at_home + (1 - in_ratio) * dinner_at_outside
+            dinner_total += in_ratio * dinner_at_home + (1 - in_ratio) * dinner_at_outside
 
+    total += breakfast_total + lunch_total + dinner_total
     fruit_cost = (apple + banana + orange) * 0.1
     total += fruit_cost
 
-    return total
+
+    return {'Breakfast':breakfast_total*30,'Lunch':lunch_total*30,'Dinner':dinner_total*30, 'Fruit':fruit_cost*30 , 'Total':total*30}
 
 def beer_cigarette_cost(beer_count,cigarette_count, prices):
     d_beer_res = prices[3]
@@ -65,31 +70,39 @@ def beer_cigarette_cost(beer_count,cigarette_count, prices):
 
     cigarette = prices[26]
 
-    total = ((d_beer_market + d_beer_res + (i_beer_market + i_beer_res)*5/3.3)/4)*beer_count/7
-    total += cigarette*cigarette_count/7
+    beer_total = ((d_beer_market + d_beer_res + (i_beer_market + i_beer_res)*5/3.3)/4)*beer_count/7
+    cig_total = cigarette*cigarette_count/7
 
-    return total
+    total = beer_total + cig_total
 
-def accomodation_cost(location,bedroom_count,prices):
+    return {'Beer':beer_total*30,'Cigarette':cig_total*30, 'Total': total*30}
+
+def accomodation_cost36(location,bedroom_count,prices):
 	in_city_centre_1bedroom = prices[44]
 	in_city_centre_3bedrooms = prices[46]
+	in_city_centre_2bedrooms = (in_city_centre_3bedrooms + in_city_centre_1bedroom)/2
 	outside_city_centre_1bedroom = prices[45]
 	outside_city_centre_3bedrooms = prices[47]
+	outside_city_centre_2bedrooms = (outside_city_centre_3bedrooms + outside_city_centre_1bedroom)/2
 
 	total = 0;
 
 	if location == "In city centre":
-		if bedroom_count == "1":
-			return in_city_centre_1bedroom/30.0
+		if bedroom_count == 1:
+			return in_city_centre_1bedroom
+		elif bedroom_count == 2:
+			return in_city_centre_2bedrooms
 		else:
-			return in_city_centre_3bedrooms/30.0
+			return in_city_centre_3bedrooms
 	else:
-		if bedroom_count == "1":
-			return outside_city_centre_1bedroom/30.0
+		if bedroom_count == 1:
+			return outside_city_centre_1bedroom
+		elif bedroom_count == 2:
+			return outside_city_centre_2bedrooms
 		else:
-			return outside_city_centre_3bedrooms/30.0
+			return outside_city_centre_3bedrooms
 
-def utilities_cost(bedroom_count,prices):
+def utilities_cost36(bedroom_count,prices):
 	basic_cost = prices[34]
 	internet_cost = prices[36]
 	total = 0
@@ -101,24 +114,48 @@ def utilities_cost(bedroom_count,prices):
 	else:
 		total += basic_cost*1.7
 
-	return total/30.0
+	return total
 
-def misc_cost(clothes_count, cinema_count, fitness, prices):
+def misc_cost36(clothes_count, cinema_count, fitness, prices):
 	clothes_cost = (prices[40] + prices[41] + prices[42] + prices[43])/4
 	cinema_cost = prices[39]
 	fitness_cost = prices[37]
 	total = 0;
 
-	total += clothes_cost*clothes_count/30.0
-	total += cinema_cost*cinema_count/30.0
+	clothes_total = clothes_cost*clothes_count/30.0
+	cinema_total = cinema_cost*cinema_count/30.0
+	fitness_total = 0
 	if fitness == "Yes":
-		total += fitness_cost/30.0
+		fitness_total = fitness_cost/30.0
+	total = clothes_total + cinema_total + fitness_total
 
-	return total
+	return {'Outfit': clothes_total*30, 'Cinema': cinema_total*30, 'Fitness':fitness_total*30, 'Total':total*30}
 
+def transportation_cost36(drive_miles, public_trans_count, taxi_count, uber_base, uber_km, prices):
+	oneway_ticket = prices[27]
+	monthly_ticket = prices[28]
+	taxi_start_cost = prices[29]
+	taxi_km_cost = prices[30]
+	gasoline_cost = prices[32]
 
+	total = 0;
 
+	cab_cost = (taxi_start_cost + taxi_km_cost*7)*taxi_count/7.0
+	uber_cost = (uber_base + uber_km*7)*taxi_count/7.0
+	if uber_base == -1:
+		taxi_cost = cab_cost
+	else:
+		taxi_cost = (cab_cost + uber_cost)/2.0
 
+	public_trans_cost = 0
+	if public_trans_count > 15:
+		public_trans_cost = monthly_ticket/30.0
+	else:
+		public_trans_cost = public_trans_count*oneway_ticket/7
 
+	drive_kilometers = drive_miles*1.60934
+	liter_consumed = drive_kilometers/9.9
+	drive_cost = liter_consumed*gasoline_cost/7
 
-
+	total = public_trans_cost + taxi_cost + drive_cost
+	return {'Public_Trans':public_trans_cost*30,'Taxi_Total':taxi_cost*30,'Drive_Total':drive_cost*30, 'Uber':uber_cost*30, 'Cab':cab_cost*30, 'Total':total*30}

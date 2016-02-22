@@ -30,82 +30,282 @@
         }
       </style>
 
-    <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}css/chartdiv.css>
+
     <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
     <script src="https://www.amcharts.com/lib/3/pie.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}css/chartdiv.css>
 
   </head>
 
   <body>
+        <div id="total_cost"><h1>Estimated monthly cost is <span style="color:#c1b068;">{{ totalCost }}</span> in this country's currency.</h1></div>
+        <div id="barchart"> </div>
+        <div id="chartdiv"></div>
+        <div id="result">
+            <div id="ttext">
+                <p><span class="Food"><strong>Breakfast: </strong></span>{{ foodCost.Breakfast }}</p>
+                <p><span class="Food"><strong>Lunch: </strong></span>{{ foodCost.Lunch }}</p>
+                <p><span class="Food"><strong>Dinner: </strong></span>{{ foodCost.Fruit }}</p>
+                <p><span class="Food"><strong>Fruit: </strong></span>{{ foodCost.Breakfast }}</p>
+                <p><span class="Transportation"><strong>Public Transportation: </strong></span>{{ transportationCost.Public_Trans }}</p>
+                <p><span class="Transportation"><strong>Taxi: </strong></span>{{ transportationCost.Taxi_Total }}</p>
+                <p><span class="Transportation"><strong>Drive: </strong></span>{{ transportationCost.Drive_Total }}</p>
+                <p><span class="Accomodation"><strong>Rent: </strong></span>{{ accomodationCost.Rent }}</p>
+                <p><span class="Accomodation"><strong>Utilities: </strong></span>{{ accomodationCost.Utilities }}</p>
+                <p><span class="Tobacco"><strong>Cigarette: </strong></span>{{ tobacco.Cigarette }}</p>
+                <p><span class="Tobacco"><strong>Beer: </strong></span>{{ tobacco.Beer }}</p>
+                <p><span class="Extras"><strong>Outfit: </strong></span>{{ miscCost.Outfit }}</p>
+                <p><span class="Extras"><strong>Cinema: </strong></span>{{ miscCost.Cinema }}</p>
+                <p><span class="Extras"><strong>Fitness: </strong></span>{{ miscCost.Fitness }}</p>
+            </div>
+        </div>
+        <script>
+            var a = [{
+                "category": "Food",
+                "cost": {{ foodCost.Total }}
+              }, {
+                "category": "Transportation",
+                "cost": {{ transportationCost.Total }}
+              }, {
+                "category": "Accomodation",
+                "cost": {{ accomodationCost.Total }}
+              }, {
+                "category": "Tobacco",
+                "cost": {{ tobacco.Total }}
+              }, {
+                "category": "Extras",
+                "cost": {{ miscCost.Total }}
+              }
+              ];
 
-		<div class="final"></div>
-            <h1>FINAL PAGE</h1>
-		</div>
-        <script type="text/javascript">
-        window.onload = function () {
-            var chart = new CanvasJS.Chart("chartContainer", {
-
-                title:{
-                    text:"Fortune Global 500 Companies by Country"
-
-                },
-                            animationEnabled: true,
-                axisX:{
-                    interval: 1,
-                    gridThickness: 0,
-                    labelFontSize: 10,
-                    labelFontStyle: "normal",
-                    labelFontWeight: "normal",
-                    labelFontFamily: "Lucida Sans Unicode"
-
-                },
-                axisY2:{
-                    interlacedColor: "rgba(1,77,101,.2)",
-                    gridColor: "rgba(1,77,101,.1)"
-
-                },
-
-                data: [
-                {
-                    type: "bar",
-                    name: "companies",
-                    axisYType: "secondary",
-                    color: "#014D65",
-                    dataPoints: [
-
-                    {y: 5, label: "Sweden"  },
-                    {y: 6, label: "Taiwan"  },
-                    {y: 7, label: "Russia"  },
-                    {y: 8, label: "Spain"  },
-                    {y: 8, label: "Brazil"  },
-                    {y: 8, label: "India"  },
-                    {y: 9, label: "Italy"  },
-                    {y: 9, label: "Australia"  },
-                    {y: 12, label: "Canada"  },
-                    {y: 13, label: "South Korea"  },
-                    {y: 13, label: "Netherlands"  },
-                    {y: 15, label: "Switzerland"  },
-                    {y: 28, label: "Britain" },
-                    {y: 32, label: "Germany"   },
-                    {y: 32, label: "France"  },
-                    {y: 68, label: "Japan"   },
-                    {y: 73, label: "China"},
-                    {y: 132, label: "US" }
-                    ]
-                }
-
-                ]
+            var chart = AmCharts.makeChart("chartdiv", {
+              "type": "pie",
+              "theme": "light",
+              "dataProvider": a,
+              "valueField": "cost",
+              "titleField": "category",
+              "color":"white",
+              "fontSize":12,
+              "fontFamily":"sans-serif",
+              "export": {
+                "enabled": true
+              }
             });
 
-    chart.render();
-    }
-    </script>
-        <div id="chartdiv"></div>
-        <div id="chartContainer" style="height: 300px; width: 300px;"> </div>
-        <script src={{ STATIC_URL }}js/pie.js></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+
+            chart.addListener("rollOverSlice", function(e) {
+              handleRollOver(e);
+            });
+
+            chart.addListener("rollOutSlice", function(e) {
+              handleRollOut(e);
+            });
+
+            function highlightFor(id,color){
+                var list = document.getElementsByClassName(id)
+                for(var i = 0 ; i < list.length ; i++)
+                    list[i].style.color = color;
+                element.style.color = color;
+            }
+
+            function handleRollOut(e){
+              var wedge = e.dataItem.wedge.node;
+              highlightFor(e.dataItem.title, "white");
+              wedge.parentNode.appendChild(wedge);
+            }
+
+            function handleRollOver(e){
+              var wedge = e.dataItem.wedge.node;
+              highlightFor(e.dataItem.title, "#a18d6c");
+              wedge.parentNode.appendChild(wedge);
+            }
+        </script>
+        <script>
+
+            var chart1 = AmCharts.makeChart("barchart", {
+                "type": "serial",
+                "theme": "light",
+                "color":"white",
+                "fontSize":12,
+                "fontFamily":"sans-serif",
+
+                "dataProvider": [{
+                    "category": "Food",
+                    "Breakfast": {{ foodCost.Breakfast }},
+                    "Lunch": {{ foodCost.Lunch }},
+                    "Dinner": {{ foodCost.Dinner }},
+                    "Fruit": {{ foodCost.Fruit }}
+                }, {
+                    "category": "Transportation",
+                    "Public_Transportation": {{ transportationCost.Public_Trans}},
+                    "Taxi": {{ transportationCost.Taxi_Total }},
+                    "Drive": {{ transportationCost.Drive_Total }}
+                }, {
+                    "category": "Accomodation",
+                    "Rent": {{ accomodationCost.Rent }},
+                    "Utilities": {{ accomodationCost.Utilities }}
+
+                }, {
+                    "category": "Tobacco",
+                    "Beer": {{ tobacco.Beer }},
+                    "Cigarette": {{ tobacco.Cigarette }}
+                }, {
+                    "category": "Extras",
+                    "Outfit": {{ miscCost.Outfit }},
+                    "Cinema": {{ miscCost.Cinema }},
+                    "Fitness": {{ miscCost.Fitness }}
+                }],
+                "valueAxes": [{
+                    "stackType": "regular",
+                    "axisAlpha": 0.3,
+                    "gridAlpha": 0
+                }],
+                "graphs": [{
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Breakfast",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Breakfast"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Lunch",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Lunch"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Dinner",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Dinner"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Fruit",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Fruit"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Public Transportation",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Public_Transportation"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Taxi",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Taxi"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Drive",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Drive"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Rent",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Rent"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Utilities",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Utilities"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Beer",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Beer"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Cigarette",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Cigarette"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Outfit",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Outfit"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Cinema",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Cinema"
+                }, {
+                    "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                    "fillAlphas": 0.8,
+                    "labelText": "[[value]]",
+                    "lineAlpha": 0.3,
+                    "title": "Fitness",
+                    "type": "column",
+                    "color": "#000000",
+                    "valueField": "Fitness"
+                }],
+                "categoryField": "category",
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "gridAlpha": 0,
+                    "position": "left"
+                },
+                "export": {
+                    "enabled": true
+                 }
+
+            });
+
+        </script>
+
   </body>
 </html>
 

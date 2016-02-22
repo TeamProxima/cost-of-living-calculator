@@ -59,8 +59,12 @@ WSGI_APPLICATION = 'deneme.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -96,5 +100,5 @@ STATICFILES_FINDERS = (
  
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, STATIC_URL),
-    '/Users/Dodo/Documents/hackathon/DjangoApp/static/',
+    '/home/blacksimit/Web/hackathon/DjangoApp/static/',
 )
